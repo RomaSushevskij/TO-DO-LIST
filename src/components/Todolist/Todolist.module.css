@@ -1,0 +1,18 @@
+.todolistWrapper {
+    width:300px;
+}
+
+h3 {
+    display: flex;
+    justify-content: space-between;
+}
+.removeButton {
+    margin-right: 30px;
+}
+
+
+
+
+
+
+
