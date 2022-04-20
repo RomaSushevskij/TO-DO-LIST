@@ -1,5 +1,6 @@
 import {todolistAPI, TodolistResponseType} from "../../../api/todolist-api";
 import {AppThunk} from '../../store';
+import {setAppStatusAC} from '../app/appReducer';
 
 const CHANGE_FILTER = 'CHANGE-FILTER';
 const REMOVE_TODOLIST = 'REMOVE-TODOLIST';
@@ -68,27 +69,35 @@ export const setToDoListsAC = (todolists: TodolistResponseType[]) => ({
 
 // T H U N K S
 export const getToDoLists = (): AppThunk => (dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.getTodolists()
         .then(data => {
             dispatch(setToDoListsAC(data))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }
 export const createTodolist = (title: string): AppThunk => dispatch => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.createTodolist(title)
         .then(data => {
             dispatch(addTodolistAC(data.data.item))
+            dispatch(setAppStatusAC('succeeded'))
         })
 
 }
 export const removeTodolist = (todolistId: string): AppThunk => dispatch => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.deleteTodolist(todolistId)
         .then(data => {
             dispatch(removeTodolistAC(todolistId))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }
 export const updateTodolistTitle = (todolistId: string, title: string): AppThunk => dispatch => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.updateTodolist(todolistId, title)
         .then(data => {
             dispatch(updateTodolistTitleAC(todolistId, title))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }

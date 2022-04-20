@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from "react";
-import {Fab, TextField} from "@mui/material";
-import {Add} from "@mui/icons-material";
+import Fab from "@mui/material/Fab";
+import TextField from "@mui/material/TextField";
+import Add from "@mui/icons-material/Add";
 
 
 export type InputWithButtonPropsType = {

@@ -3,8 +3,9 @@ import style from './Todolist.module.css'
 import {TasksMap} from "../TasksMap/TasksMap";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {InputWithButton} from "../InputWithButton/InputWithButton";
-import {ButtonGroup, IconButton} from "@mui/material";
-import {Close} from "@mui/icons-material";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import IconButton from "@mui/material/IconButton";
+import Close from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../store/store";

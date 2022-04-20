@@ -8,13 +8,16 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Container} from "@mui/material";
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {createTodolist, getToDoLists, TodolistType} from "./store/reducers/todolists/todolistReducer";
-import {AppStateType} from "./store/store";
+import {AppStateType, useAppSelector} from "./store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {Todolist} from './components/Todolist/Todolist';
+import LinearProgress from '@mui/material/LinearProgress';
+import {RequestStatusType} from './store/reducers/app/appReducer';
+import {ErrorSnackbar} from './components/ErrorSnackar/ErrorSnackbar';
 
 function App() {
     const todolists: Array<TodolistType> = useSelector((state: AppStateType) => state.todolists)
@@ -26,6 +29,7 @@ function App() {
     const addTodolist = (newTodolistTitle: string) => {
         dispatch(createTodolist(newTodolistTitle))
     };
+    const status = useAppSelector<RequestStatusType>(state => state.app.status)
 
     return (
         <div className="App">
@@ -46,6 +50,7 @@ function App() {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
+            {status === 'loading' && <LinearProgress color="success"/>}
             <Container fixed>
                 <Grid container style={{justifyContent: 'center', margin: '20px 0'}}>
                     <InputWithButton inputLabel={'Todolist title'} buttonName={'x'} addItem={addTodolist}/>
@@ -64,6 +69,7 @@ function App() {
                     })}
                 </Grid>
             </Container>
+            <ErrorSnackbar/>
         </div>
     );
 }

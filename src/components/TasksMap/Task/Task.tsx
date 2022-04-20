@@ -1,7 +1,8 @@
 import style from "./Task.module.css";
-import {Checkbox, IconButton} from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
 import {EditableSpan} from "../../EditableSpan/EditableSpan";
-import {Delete} from "@mui/icons-material";
+import Delete from "@mui/icons-material/Delete";
 import React, {useCallback} from "react";
 import {AppStateType} from "../../../store/store";
 import {useDispatch, useSelector} from "react-redux";

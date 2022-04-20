@@ -1,6 +1,7 @@
 import {AddTodolistType, RemoveTodolistType, SetTodolistsType} from "../todolists/todolistReducer";
 import {TaskType, todolistAPI, UpdateTaskModelType} from "../../../api/todolist-api";
 import {AppThunk} from '../../store';
+import {setAppStatusAC} from '../app/appReducer';
 
 const ADD_TASK = 'ADD-TASK';
 const REMOVE_TASK = 'REMOVE-TASK';
@@ -89,21 +90,27 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateTa
 
 // T H U N K S
 export const getTasks = (todolistID: string): AppThunk => (dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.getTasks(todolistID)
         .then(data => {
             dispatch(setTasksAC(data.items, todolistID))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }
 export const removeTask = (todolistId: string, taskId: string): AppThunk => dispatch => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.removeTask(todolistId, taskId)
         .then(data => {
             dispatch(removeTaskAC(todolistId, taskId))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }
 export const addTask = (todolistId: string, title: string): AppThunk => dispatch => {
+    dispatch(setAppStatusAC('loading'))
     todolistAPI.createTask(todolistId, title)
         .then(data => {
             dispatch(addTaskAC(data.data.item))
+            dispatch(setAppStatusAC('succeeded'))
         })
 }
 
@@ -127,9 +134,11 @@ export const updateTask = (todolistId: string, taskId: string, model: UpdateTask
             title: currentTask.title,
             ...model
         }
+        dispatch(setAppStatusAC('loading'))
         todolistAPI.updateTask(todolistId, taskId, modelStatus)
             .then(data => {
                 dispatch(updateTaskAC(todolistId, taskId, model))
+                dispatch(setAppStatusAC('succeeded'))
             })
     }
 }
