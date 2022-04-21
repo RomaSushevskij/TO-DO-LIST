@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
-import './App.css';
+import './App.module.css';
+import style from './App.module.css'
 
 import {InputWithButton} from "./components/InputWithButton/InputWithButton";
 import AppBar from '@mui/material/AppBar';
@@ -10,7 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import {createTodolist, getToDoLists, TodolistType} from "./store/reducers/todolists/todolistReducer";
 import {AppStateType, useAppSelector} from "./store/store";
 import {useDispatch, useSelector} from "react-redux";
@@ -50,21 +50,19 @@ function App() {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
-            {status === 'loading' && <LinearProgress color="success"/>}
+            {status === 'loading' && <LinearProgress color={'warning'}/>}
             <Container fixed>
                 <Grid container style={{justifyContent: 'center', margin: '20px 0'}}>
-                    <InputWithButton inputLabel={'Todolist title'} buttonName={'x'} addItem={addTodolist}/>
+                    <InputWithButton inputLabel={'Todolist title'}
+                                     buttonName={'x'}
+                                     addItem={addTodolist}/>
                 </Grid>
                 <Grid container spacing={5}
                       style={{justifyContent: 'center'}}>
                     {todolists.map(td => {
                         return (
                             <Grid key={td.id} item>
-                                <Paper style={{backgroundColor: '#ffffff', padding: '1px 20px 20px 20px'}}>
-                                    <Todolist
-                                        todolistID={td.id}
-                                    />
-                                </Paper>
+                                <Todolist todolistID={td.id}/>
                             </Grid>)
                     })}
                 </Grid>

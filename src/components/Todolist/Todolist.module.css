@@ -1,11 +1,14 @@
 .todolistWrapper {
-    width:300px;
+    box-sizing: border-box;
+    width: 310px;
+    position: relative;
 }
 
 h3 {
     display: flex;
     justify-content: space-between;
 }
+
 .removeButton {
     margin-right: 30px;
 }

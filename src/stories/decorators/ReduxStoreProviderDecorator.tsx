@@ -1,11 +1,12 @@
 import {Provider} from "react-redux";
-import {AppStateType, store} from "../../store/store";
+import {AppStateType, NullableType} from "../../store/store";
 import {combineReducers, createStore} from "redux";
 import {tasksReducer} from "../../store/reducers/tasks/tasksReducer";
 import {todolistsReducer} from "../../store/reducers/todolists/todolistReducer";
 import {v1} from "uuid";
 import {TaskPriorities, TaskStatuses} from "../../api/todolist-api";
 import {appReducer, RequestStatusType} from '../../store/reducers/app/appReducer';
+
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
@@ -14,9 +15,9 @@ const rootReducer = combineReducers({
 
 const initialGlobalState = {
     todolists: [
-        {id: 'todolistID_1', title: 'What to learn', filter: 'All', addedDate: '', order: 0},
-        {id: 'todolistID_2', title: 'What to work', filter: 'All', addedDate: '', order: 0}
-    ] ,
+        {id: 'todolistID_1', title: 'What to learn', filter: 'All', entityStatus: 'idle', addedDate: '', order: 0},
+        {id: 'todolistID_2', title: 'What to work', filter: 'All', entityStatus: 'idle', addedDate: '', order: 0}
+    ],
     tasks: {
         ['todolistID_1']: [
             {
@@ -72,7 +73,8 @@ const initialGlobalState = {
         ]
     },
     app: {
-        status: 'idle' as RequestStatusType
+        status: 'idle' as RequestStatusType,
+        errorMessage: null as NullableType<string>
     }
 };
 

@@ -5,6 +5,7 @@ import {
     changeFilterAC,
     removeTodolistAC,
     setToDoListsAC,
+    changeToDoListsEntityStatusAC,
     todolistsReducer,
     TodolistType,
     updateTodolistTitleAC
@@ -21,8 +22,8 @@ beforeEach(() => {
     todolistID_1 = v1();
     todolistID_2 = v1();
     startTodolistState = [
-        {id: todolistID_1, title: 'What to learn', filter: 'All', addedDate: '', order: 0},
-        {id: todolistID_2, title: 'What to work', filter: 'All', addedDate: '', order: 1}
+        {id: todolistID_1, title: 'What to learn', filter: 'All', entityStatus: 'idle', addedDate: '', order: 0},
+        {id: todolistID_2, title: 'What to work', filter: 'All', entityStatus: 'idle', addedDate: '', order: 1}
     ]
     startTasksState = {
         "todolistId1": [
@@ -315,8 +316,8 @@ test('current todolists should be added to state', () => {
         {id: todoId_2, title: 'Todos 2', addedDate: '', order: 1}
     ]
     const currentTodolistsRes = [
-        {id: todoId_1, title: 'Todos 1', addedDate: '', order: 0, filter: 'All'},
-        {id: todoId_2, title: 'Todos 2', addedDate: '', order: 1, filter: 'All'}
+        {id: todoId_1, title: 'Todos 1', addedDate: '', order: 0, filter: 'All', entityStatus: 'idle'},
+        {id: todoId_2, title: 'Todos 2', addedDate: '', order: 1, filter: 'All', entityStatus: 'idle'}
     ]
 
     const endTodolistState = todolistsReducer(startTodolistState, setToDoListsAC(currentTodolists))
@@ -325,5 +326,12 @@ test('current todolists should be added to state', () => {
     expect(endTodolistState).toEqual(currentTodolistsRes)
     expect(endTasksState).toEqual({...startTasksState, [todoId_1]: [], [todoId_2]: []})
 })
+test('correct entityStatus of todolist should be changed', () => {
+
+    const endTodolistState = todolistsReducer(startTodolistState, changeToDoListsEntityStatusAC(todolistID_1, 'loading'));
+    expect(endTodolistState[0].entityStatus).toBe('loading')
+    expect(endTodolistState[1].entityStatus).toBe('idle')
+})
+
 
 

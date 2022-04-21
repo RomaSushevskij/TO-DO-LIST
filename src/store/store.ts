@@ -21,5 +21,6 @@ export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,
     unknown,
     AppActionsType>
 export const useAppSelector: TypedUseSelectorHook<AppStateType> = useSelector
+export type NullableType<T> = null | T
 //@ts-ignore
 window.store = store

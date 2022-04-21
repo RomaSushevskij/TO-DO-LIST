@@ -8,12 +8,13 @@ export type InputWithButtonPropsType = {
     buttonName: string
     addItem: (inputTitleValue: string) => void
     inputLabel: string
-
+    disabled?: boolean
 }
 
 export const InputWithButton = React.memo(({
                                                addItem,
                                                inputLabel,
+                                               disabled,
                                                ...props
                                            }: InputWithButtonPropsType) => {
 
@@ -45,20 +46,18 @@ export const InputWithButton = React.memo(({
     }, [onButtonClick]);
     return (
         <div>
-            {/*<input className={error ? style.error : style.addTaskInput}
-            onChange={onChangeInput} value={inputTitleValue}
-                   onKeyPress={onKeyPressAddTaskHandler}/>*/}
             <TextField error={error}
                        onChange={onChangeInput} value={inputTitleValue}
                        onKeyPress={onKeyPressAddTaskHandler}
                        helperText={error ? 'Field is required' : null}
                        size={"small"} id="outlined-basic"
                        label={inputLabel}
-                       variant="outlined"/>
-            {/*<button onClick={onButtonClick}>{buttonName}</button>*/}
+                       variant="outlined"
+                       disabled={disabled}/>
             <Fab style={{marginLeft: "15px"}}
                  onClick={onButtonClick} color="primary"
-                 aria-label="add" size={"small"}>
+                 aria-label="add" size={"small"}
+                 disabled={disabled}            >
                 <Add/>
             </Fab>
         </div>
