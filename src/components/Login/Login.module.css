@@ -1,0 +1,12 @@
+.fieldWrapper {
+    margin-bottom: 30px;
+    position: relative;
+}
+.fieldWrapper > * {
+    width:100%;
+}
+.fieldWrapper .messageError {
+    font-size: 13px;
+    position: absolute;
+    color:red;
+}

@@ -1,34 +1,27 @@
 import React, {useEffect} from 'react';
 import './App.module.css';
-import style from './App.module.css'
-
-import {InputWithButton} from "./components/InputWithButton/InputWithButton";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import {createTodolist, getToDoLists, TodolistType} from "./store/reducers/todolists/todolistReducer";
-import {AppStateType, useAppSelector} from "./store/store";
-import {useDispatch, useSelector} from "react-redux";
-import {Todolist} from './components/Todolist/Todolist';
+import {getToDoLists} from "./store/reducers/todolists/todolistReducer";
+import {useAppSelector} from "./store/store";
+import {useDispatch} from "react-redux";
 import LinearProgress from '@mui/material/LinearProgress';
 import {RequestStatusType} from './store/reducers/app/appReducer';
 import {ErrorSnackbar} from './components/ErrorSnackar/ErrorSnackbar';
+import {TodolistList} from './components/TodolistList/TodolistList';
+import Container from '@mui/material/Container';
+import {Navigate, Route, Routes} from 'react-router-dom';
+import {Login} from './components/Login/Login';
 
 function App() {
-    const todolists: Array<TodolistType> = useSelector((state: AppStateType) => state.todolists)
-    const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getToDoLists())
     }, [])
-    //functionality for adding todolists
-    const addTodolist = (newTodolistTitle: string) => {
-        dispatch(createTodolist(newTodolistTitle))
-    };
+    const dispatch = useDispatch()
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
 
     return (
@@ -49,23 +42,15 @@ function App() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+                {status === 'loading' && <LinearProgress color={'warning'}/>}
             </AppBar>
-            {status === 'loading' && <LinearProgress color={'warning'}/>}
             <Container fixed>
-                <Grid container style={{justifyContent: 'center', margin: '20px 0'}}>
-                    <InputWithButton inputLabel={'Todolist title'}
-                                     buttonName={'x'}
-                                     addItem={addTodolist}/>
-                </Grid>
-                <Grid container spacing={5}
-                      style={{justifyContent: 'center'}}>
-                    {todolists.map(td => {
-                        return (
-                            <Grid key={td.id} item>
-                                <Todolist todolistID={td.id}/>
-                            </Grid>)
-                    })}
-                </Grid>
+                <Routes>
+                    <Route path={'/'} element={<TodolistList/>}/>
+                    <Route path={'login'} element={<Login/>}/>
+                    <Route path={'404'} element={<h1>404 page not found</h1>}/>
+                    <Route path={'*'} element={<Navigate to={'404'}/>}/>
+                </Routes>
             </Container>
             <ErrorSnackbar/>
         </div>
