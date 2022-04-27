@@ -61,6 +61,17 @@ export enum RESULT_CODES {
     captchaIsRequired = 10
 }
 
+export type LoginPayloadDataType = {
+    email: string,
+    password: string,
+    rememberMe?: boolean,
+    captcha?: string
+}
+export type MeDataResponseType = {
+    id: number
+    login: string
+    email: string
+}
 
 const todoInstance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -116,6 +127,26 @@ export const todolistAPI = {
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
         return todoInstance.put<any, AxiosResponse<ResponseType<TaskType>>, UpdateTaskModelType>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
+            .then(response => {
+                return response.data
+            })
+    }
+}
+export const authAPI = {
+    login(data: LoginPayloadDataType) {
+        return todoInstance.post<ResponseType, AxiosResponse<ResponseType<{ userId: number }>>, LoginPayloadDataType>('auth/login', data)
+            .then(response => {
+                return response.data
+            })
+    },
+    me() {
+        return todoInstance.get<ResponseType<MeDataResponseType>>('auth/me')
+            .then(response => {
+                return response.data
+            })
+    },
+    logout() {
+        return todoInstance.delete<ResponseType>('auth/login')
             .then(response => {
                 return response.data
             })

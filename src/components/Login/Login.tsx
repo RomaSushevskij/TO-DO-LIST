@@ -8,26 +8,27 @@ import Grid from "@mui/material/Grid";
 import FormLabel from "@mui/material/FormLabel";
 import {useFormik} from 'formik';
 import style from './Login.module.css';
-
-type LoginFormValues = {
-    email: string,
-    password: string,
-    rememberMe: boolean,
-}
+import {LoginPayloadDataType} from '../../api/todolist-api';
+import {useDispatch} from 'react-redux';
+import {login} from '../../store/reducers/auth/authReducer';
+import {useAppSelector} from '../../store/store';
+import {Navigate} from 'react-router-dom';
 
 export const Login = () => {
+    const dispatch = useDispatch()
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
             rememberMe: false
-        } as LoginFormValues,
-        onSubmit: values => {
-            alert(JSON.stringify(values));
+        } as Omit<LoginPayloadDataType, 'captcha'>,
+        onSubmit: (values: Omit<LoginPayloadDataType, 'captcha'>) => {
+            dispatch(login(values))
             formik.resetForm()
         },
-        validate: (values: LoginFormValues) => {
-            const errors: Partial<LoginFormValues> = {};
+        validate: (values: Omit<LoginPayloadDataType, 'captcha'>) => {
+            const errors: Partial<Omit<LoginPayloadDataType, 'captcha'>> = {};
             if (!values.email) {
                 errors.email = 'Required';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
@@ -41,6 +42,9 @@ export const Login = () => {
             return errors;
         }
     });
+    if (isLoggedIn) {
+        return <Navigate to={'/'}/>
+    }
     return (
         <Grid container justifyContent={'center'}>
             <Grid item xs={4}>

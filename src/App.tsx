@@ -6,24 +6,32 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {getToDoLists} from "./store/reducers/todolists/todolistReducer";
 import {useAppSelector} from "./store/store";
-import {useDispatch} from "react-redux";
 import LinearProgress from '@mui/material/LinearProgress';
-import {RequestStatusType} from './store/reducers/app/appReducer';
+import {initializeApp, RequestStatusType} from './store/reducers/app/appReducer';
 import {ErrorSnackbar} from './components/ErrorSnackar/ErrorSnackbar';
 import {TodolistList} from './components/TodolistList/TodolistList';
 import Container from '@mui/material/Container';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Login} from './components/Login/Login';
+import {useDispatch} from 'react-redux';
+import {Preloader} from './components/Preloader/Preloader';
+import {logout} from './store/reducers/auth/authReducer';
 
 function App() {
-    useEffect(() => {
-        dispatch(getToDoLists())
-    }, [])
     const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(initializeApp())
+    }, [])
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
-
+    const isInitialized = useAppSelector<boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+    if (!isInitialized) {
+        return <Preloader/>
+    }
+    const logoutHandler = () => {
+        dispatch(logout())
+    }
     return (
         <div className="App">
             <AppBar position="static">
@@ -40,7 +48,7 @@ function App() {
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
                 </Toolbar>
                 {status === 'loading' && <LinearProgress color={'warning'}/>}
             </AppBar>
