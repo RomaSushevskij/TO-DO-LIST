@@ -13,6 +13,7 @@ import {useDispatch} from 'react-redux';
 import {login} from '../../store/reducers/auth/authReducer';
 import {useAppSelector} from '../../store/store';
 import {Navigate} from 'react-router-dom';
+import Paper from '@mui/material/Paper';
 
 export const Login = () => {
     const dispatch = useDispatch()
@@ -46,48 +47,50 @@ export const Login = () => {
         return <Navigate to={'/'}/>
     }
     return (
-        <Grid container justifyContent={'center'}>
-            <Grid item xs={4}>
-                <form onSubmit={formik.handleSubmit}>
-                    <FormControl>
-                        <FormLabel>
-                            <p>
-                                To log in get registered
-                                <a href={'https://social-network.samuraijs.com/'}
-                                   target={'_blank'}> here <br/>
-                                </a>
+        <Grid container justifyContent={'center'} style={{minHeight: 'calc(100vh - 75px'}}>
+            <Grid item>
+                <Paper style={{backgroundColor: '#EBECF0', padding:' 20px'}}>
+                    <form onSubmit={formik.handleSubmit} >
+                        <FormControl>
+                            <FormLabel>
+                                <p>
+                                    To log in get registered
+                                    <a href={'https://social-network.samuraijs.com/'}
+                                       target={'_blank'}> here <br/>
+                                    </a>
 
-                                or use common test account credentials:
-                            </p>
-                            Email: free@samuraijs.com<br/>
-                            Password: free<br/>
-                        </FormLabel>
-                        <FormGroup>
-                            <div className={style.fieldWrapper}>
-                                <TextField label={'Email'}
-                                           margin={'normal'}
-                                           {...formik.getFieldProps('email')}/>
-                                {formik.errors.email && formik.touched.email &&
-                                <div className={style.messageError}>{formik.errors.email}</div>}
-                            </div>
-                            <div className={style.fieldWrapper}>
-                                <TextField label={'Password'}
-                                           type={'password'}
-                                           margin={'normal'}
-                                           {...formik.getFieldProps('password')}/>
-                                {formik.errors.password && formik.touched.password &&
-                                <div className={style.messageError}>{formik.errors.password}</div>}
-                            </div>
-                            <FormControlLabel label={'Remember me'}
-                                              control={
-                                                  <Checkbox {...formik.getFieldProps('rememberMe')}/>}
-                                              style={{marginBottom: '20px'}}/>
-                            <Button variant={'contained'} type={'submit'}>
-                                Login
-                            </Button>
-                        </FormGroup>
-                    </FormControl>
-                </form>
+                                    or use common test account credentials:
+                                </p>
+                                Email: <b>free@samuraijs.com</b><br/>
+                                Password: <b>free</b><br/>
+                            </FormLabel>
+                            <FormGroup>
+                                <div className={style.fieldWrapper}>
+                                    <TextField label={'Email'}
+                                               margin={'normal'}
+                                               {...formik.getFieldProps('email')}/>
+                                    {formik.errors.email && formik.touched.email &&
+                                    <div className={style.messageError}>{formik.errors.email}</div>}
+                                </div>
+                                <div className={style.fieldWrapper}>
+                                    <TextField label={'Password'}
+                                               type={'password'}
+                                               margin={'normal'}
+                                               {...formik.getFieldProps('password')}/>
+                                    {formik.errors.password && formik.touched.password &&
+                                    <div className={style.messageError}>{formik.errors.password}</div>}
+                                </div>
+                                <FormControlLabel label={'Remember me'}
+                                                  control={
+                                                      <Checkbox {...formik.getFieldProps('rememberMe')}/>}
+                                                  style={{marginBottom: '20px'}}/>
+                                <Button variant={'contained'} type={'submit'}>
+                                    Login
+                                </Button>
+                            </FormGroup>
+                        </FormControl>
+                    </form>
+                </Paper>
             </Grid>
         </Grid>
     )

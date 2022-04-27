@@ -7,10 +7,14 @@
 h3 {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    color:#172B4D;
 }
 
-.removeButton {
-    margin-right: 30px;
+.buttonsBlock {
+    display: flex;
+    width: 100%;
+    justify-content: center;
 }
 
 

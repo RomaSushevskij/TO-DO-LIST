@@ -37,16 +37,17 @@ export const Task = React.memo(({
     }, [dispatch, todolistID, taskID])
 
     return (
-        <li className={task.status === TaskStatuses.Completed ? style.isDone : ''}>
-            <Checkbox checked={task.status === TaskStatuses.Completed}
-                      onChange={onUpdateTaskStatus}
-                      color={"success"}/>
-            <EditableSpan labelInput='Task title' updateTitle={onUpdateTaskTitleHandler} title={task.title}/>
-            <IconButton className={style.removeButton}
-                        onClick={onClickRemovingTaskHandler}
-                        aria-label="delete" size="small">
-                <Delete style={{color: '#E84C3F'}}/>
-            </IconButton>
-        </li>
+            <li className={task.status === TaskStatuses.Completed ? style.isDone : ''}>
+                <Checkbox checked={task.status === TaskStatuses.Completed}
+                          onChange={onUpdateTaskStatus}
+                          style={{color:'rgba(98,194,118,0.79)'}}
+                          color={"success"}/>
+                <EditableSpan labelInput='Task title' updateTitle={onUpdateTaskTitleHandler} title={task.title}/>
+                <IconButton className={style.removeButton}
+                            onClick={onClickRemovingTaskHandler}
+                            aria-label="delete" size="small">
+                    <Delete style={{color: '#D39BC3'}}/>
+                </IconButton>
+            </li>
     )
 })

@@ -2,6 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from "react";
 import Fab from "@mui/material/Fab";
 import TextField from "@mui/material/TextField";
 import Add from "@mui/icons-material/Add";
+import style from './InputWithButton.module.css'
 
 
 export type InputWithButtonPropsType = {
@@ -47,17 +48,20 @@ export const InputWithButton = React.memo(({
     return (
         <div>
             <TextField error={error}
-                       onChange={onChangeInput} value={inputTitleValue}
+                       onChange={onChangeInput}
+                       value={inputTitleValue}
                        onKeyPress={onKeyPressAddTaskHandler}
                        helperText={error ? 'Field is required' : null}
                        size={"small"} id="outlined-basic"
                        label={inputLabel}
                        variant="outlined"
-                       disabled={disabled}/>
-            <Fab style={{marginLeft: "15px"}}
-                 onClick={onButtonClick} color="primary"
+                       disabled={disabled}
+                       style={{borderColor: '#6D88B8'}}
+            className={style.textField}/>
+            <Fab style={{marginLeft: "15px", backgroundColor: '#6D88B8', color: '#ffffff'}}
+                 onClick={onButtonClick}
                  aria-label="add" size={"small"}
-                 disabled={disabled}            >
+                 disabled={disabled}>
                 <Add/>
             </Fab>
         </div>

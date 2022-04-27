@@ -18,6 +18,7 @@ import {useDispatch} from 'react-redux';
 import {Preloader} from './components/Preloader/Preloader';
 import {logout} from './store/reducers/auth/authReducer';
 import style from './App.module.css'
+
 function App() {
     const dispatch = useDispatch()
     useEffect(() => {
@@ -32,9 +33,14 @@ function App() {
     const logoutHandler = () => {
         dispatch(logout())
     }
+    const appBapStyle = {
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        boxShadow: 'none',
+        color: 'rgba(255,255,255,0.7)',
+    }
     return (
         <div className="App">
-            <AppBar position="static">
+            <AppBar position="static" style={appBapStyle}>
                 <Toolbar>
                     <IconButton
                         size="large"

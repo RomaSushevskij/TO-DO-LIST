@@ -24,15 +24,16 @@ export const TodolistList = () => {
     if (!isLoggedIn) {
         return <Navigate to={'/login'}/>
     }
+
     return (
         <>
-            <Grid container style={{justifyContent: 'center', margin: '20px 0'}}>
+            <Grid container  style={{justifyContent: 'center', margin: '20px 0', marginBottom:'30px'}}>
                 <InputWithButton inputLabel={'Todolist title'}
                                  buttonName={'x'}
                                  addItem={addTodolist}/>
             </Grid>
             <Grid container spacing={5}
-                  style={{justifyContent: 'center'}}>
+                  style={{justifyContent: 'center', marginBottom:'30px'}}>
                 {todolists.map(td => {
                     return (
                         <Grid key={td.id} item>

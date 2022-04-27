@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import {useDispatch, useSelector} from "react-redux";
-import {AppStateType} from "../../store/store";
+import {AppStateType, useAppSelector} from "../../store/store";
 import {addTask} from "../../store/reducers/tasks/tasksReducer";
 import {
     changeFilterAC,
@@ -18,6 +18,7 @@ import {
     updateTodolistTitle
 } from "../../store/reducers/todolists/todolistReducer";
 import Paper from '@mui/material/Paper';
+import {TaskType} from '../../api/todolist-api';
 
 
 type TodolistPropsType = {
@@ -27,7 +28,8 @@ type TodolistPropsType = {
 
 export const Todolist = (props: TodolistPropsType) => {
     const selectTodolist = (state: AppStateType) => state.todolists.filter(td => td.id === props.todolistID)[0]
-    const todolist: TodolistType = useSelector(selectTodolist)
+    const todolist:TodolistType = useSelector(selectTodolist)
+    const tasks = useAppSelector<TaskType[]>(state=>state.tasks[props.todolistID])
     const dispatch = useDispatch()
 
     //functionality for removing todolists
@@ -51,44 +53,48 @@ export const Todolist = (props: TodolistPropsType) => {
     const isDisabled = todolist.entityStatus === 'loading'
     return (
         <div className={style.todolistWrapper}>
-            <Paper style={{backgroundColor: '#ffffff', padding: '1px 20px 20px 20px'}}>
-                <h3>
-                    <EditableSpan labelInput='Todolist title'
-                                  title={todolist.title}
-                                  updateTitle={onUpdateTodolistTitle}/>
-                    <IconButton className={style.removeButton}
-                                onClick={onClickRemovingTodolistHandler}
-                                aria-label="delete" size="small"
-                                disabled={isDisabled}>
-                        <Close style={{color: `${isDisabled ? '#C2C2C2' : '#E94C3B'}`}}/>
-                    </IconButton>
-                </h3>
-                <div>
+            <Paper style={{backgroundColor: '#EBECF0', padding: '1px 20px 20px 20px'}}>
+                <div className={style.todolistHeader}>
+                    <h3>
+                        <EditableSpan labelInput='Todolist title'
+                                      title={todolist.title}
+                                      updateTitle={onUpdateTodolistTitle}/>
+                        <IconButton className={style.removeButton}
+                                    onClick={onClickRemovingTodolistHandler}
+                                    aria-label="delete" size="small"
+                                    disabled={isDisabled}>
+                            <Close style={{color: `${isDisabled ? '#C2C2C2' : '#172B4D'}`}}/>
+                        </IconButton>
+                    </h3>
+                </div>
+                <div className={style.inputWithButtonBlock}>
                     <InputWithButton inputLabel={'Task title'}
                                      buttonName={'+'}
                                      addItem={onClickAddTaskHandler}
                                      disabled={todolist.entityStatus === 'loading'}/>
                 </div>
                 <TasksMap todolistID={props.todolistID}/>
-                <div>
+                {tasks && tasks.length > 0 &&
+                <div className={style.buttonsBlock}>
                     <ButtonGroup color={"inherit"} variant="text" aria-label="text button group">
                         <Button onClick={() => onClickFilterType('All')}
                                 variant={todolist.filter === 'All' ? "contained" : "text"}
-                                style={{backgroundColor: `${todolist.filter === 'All' ? '#FFB024' : ''}`}}>
+                                style={{backgroundColor: `${todolist.filter === 'All' ? '#FBDC97' : ''}`}}>
                             All
                         </Button>
                         <Button onClick={() => onClickFilterType('Active')}
                                 variant={todolist.filter === 'Active' ? "contained" : "text"}
-                                style={{backgroundColor: `${todolist.filter === 'Active' ? '#62C276' : ''}`}}>
+                                style={{backgroundColor: `${todolist.filter === 'Active' ? 'rgba(98,194,118,0.65)' : ''}`}}>
                             Active
                         </Button>
                         <Button onClick={() => onClickFilterType('Completed')}
                                 variant={todolist.filter === 'Completed' ? "contained" : "text"}
-                                style={{backgroundColor: `${todolist.filter === 'Completed' ? '#27B6BA' : ''}`}}>
+                                style={{backgroundColor: `${todolist.filter === 'Completed' ? 'rgba(39,182,186,0.59)' : ''}`}}>
                             Completed
                         </Button>
                     </ButtonGroup>
                 </div>
+                }
             </Paper>
         </div>
     );
