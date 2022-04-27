@@ -8,7 +8,7 @@ import {
     changeToDoListsEntityStatusAC,
     todolistsReducer,
     TodolistType,
-    updateTodolistTitleAC
+    updateTodolistTitleAC, resetTodolistsDataAC
 } from "./todolistReducer";
 import {tasksReducer, TasksType} from "../tasks/tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../../api/todolist-api";
@@ -331,6 +331,12 @@ test('correct entityStatus of todolist should be changed', () => {
     const endTodolistState = todolistsReducer(startTodolistState, changeToDoListsEntityStatusAC(todolistID_1, 'loading'));
     expect(endTodolistState[0].entityStatus).toBe('loading')
     expect(endTodolistState[1].entityStatus).toBe('idle')
+})
+test('data of todolists should be reset after logout', () => {
+    const endTodolistState = todolistsReducer(startTodolistState, resetTodolistsDataAC())
+    const endTasksState = tasksReducer(startTasksState, resetTodolistsDataAC())
+    expect(endTodolistState).toStrictEqual([])
+    expect(endTasksState).toStrictEqual({})
 })
 
 

@@ -2,3 +2,6 @@ body {
     background-color: #f5f5f5;
 }
 
+.progressBar {
+    min-height: 10px;
+}

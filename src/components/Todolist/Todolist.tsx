@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import style from './Todolist.module.css'
 import {TasksMap} from "../TasksMap/TasksMap";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
@@ -9,7 +9,7 @@ import Close from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../store/store";
-import {addTask, getTasks} from "../../store/reducers/tasks/tasksReducer";
+import {addTask} from "../../store/reducers/tasks/tasksReducer";
 import {
     changeFilterAC,
     FilterValueType,
@@ -30,9 +30,6 @@ export const Todolist = (props: TodolistPropsType) => {
     const todolist: TodolistType = useSelector(selectTodolist)
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(getTasks(props.todolistID))
-    }, [])
     //functionality for removing todolists
     const onClickRemovingTodolistHandler = () => {
         dispatch(removeTodolist(props.todolistID))

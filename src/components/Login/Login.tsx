@@ -30,12 +30,12 @@ export const Login = () => {
         validate: (values: Omit<LoginPayloadDataType, 'captcha'>) => {
             const errors: Partial<Omit<LoginPayloadDataType, 'captcha'>> = {};
             if (!values.email) {
-                errors.email = 'Required';
+                errors.email = 'Field is required';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
                 errors.email = 'Invalid email address';
             }
             if (!values.password) {
-                errors.password = 'Required';
+                errors.password = 'Field is required';
             } else if (values.password.length < 3) {
                 errors.password = 'The password field must be at least 3 characters'
             }

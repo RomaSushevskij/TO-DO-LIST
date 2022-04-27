@@ -1,8 +1,9 @@
 import {RESULT_CODES, todolistAPI, TodolistResponseType} from "../../../api/todolist-api";
 import {AppThunk} from '../../store';
-import {RequestStatusType, setAppErrorMessageAC, setAppStatusAC} from '../app/appReducer';
+import {RequestStatusType, setAppStatusAC} from '../app/appReducer';
 import {AxiosError} from 'axios';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
+import {getTasks} from '../tasks/tasksReducer';
 
 export enum TODOLISTS_ACTIONS_TYPES {
     CHANGE_TODOLIST_FILTER = 'TODOLIST/CHANGE-FILTER',
@@ -10,7 +11,8 @@ export enum TODOLISTS_ACTIONS_TYPES {
     ADD_TODOLIST = 'TODOLIST/ADD_TODOLIST',
     UPDATE_TODOLIST_TITLE = 'TODOLIST/UPDATE_TODOLIST_TITLE',
     SET_TODOLISTS = 'TODOLIST/SET_TODOLISTS',
-    CHANGE_TODOLIST_ENTITY_STATUS = 'TODOLIST/CHANGE_TODOLIST_ENTITY_STATUS'
+    CHANGE_TODOLIST_ENTITY_STATUS = 'TODOLIST/CHANGE_TODOLIST_ENTITY_STATUS',
+    RESET_TODOLISTS_DATA = 'TODOLIST/RESET_TODOLISTS_DATA',
 }
 
 export type FilterValueType = 'All' | 'Active' | 'Completed'
@@ -39,6 +41,8 @@ export const todolistsReducer = (state: Array<TodolistType> = initialState, acti
         case TODOLISTS_ACTIONS_TYPES.CHANGE_TODOLIST_ENTITY_STATUS:
             return state.map((td => td.id === action.payload.todolistId ?
                 {...td, entityStatus: action.payload.entityStatus} : td))
+        case TODOLISTS_ACTIONS_TYPES.RESET_TODOLISTS_DATA:
+            return []
         default:
             return state
     }
@@ -46,14 +50,16 @@ export const todolistsReducer = (state: Array<TodolistType> = initialState, acti
 export type  AddTodolistType = ReturnType<typeof addTodolistAC>
 export type RemoveTodolistType = ReturnType<typeof removeTodolistAC>
 export type SetTodolistsType = ReturnType<typeof setToDoListsAC>
+export type ResetTodolistsDataType = ReturnType<typeof resetTodolistsDataAC>
 
 export type GeneralTodolistsACType =
     | ReturnType<typeof changeFilterAC>
-    | ReturnType<typeof removeTodolistAC>
-    | ReturnType<typeof addTodolistAC>
+    | RemoveTodolistType
+    | AddTodolistType
     | ReturnType<typeof updateTodolistTitleAC>
-    | ReturnType<typeof setToDoListsAC>
+    | SetTodolistsType
     | ReturnType<typeof changeToDoListsEntityStatusAC>
+    | ResetTodolistsDataType
 
 // A C T I O N S
 export const changeFilterAC = (todolistID: string, filterType: FilterValueType) => ({
@@ -80,6 +86,9 @@ export const changeToDoListsEntityStatusAC = (todolistId: string, entityStatus: 
     type: TODOLISTS_ACTIONS_TYPES.CHANGE_TODOLIST_ENTITY_STATUS,
     payload: {todolistId, entityStatus}
 } as const)
+export const resetTodolistsDataAC = () => ({
+    type: TODOLISTS_ACTIONS_TYPES.RESET_TODOLISTS_DATA
+} as const)
 
 // T H U N K S
 export const getToDoLists = (): AppThunk => (dispatch) => {
@@ -87,6 +96,12 @@ export const getToDoLists = (): AppThunk => (dispatch) => {
     todolistAPI.getTodolists()
         .then(data => {
             dispatch(setToDoListsAC(data))
+            return data
+        })
+        .then(data => {
+            data.forEach((todolist => {
+                dispatch(getTasks(todolist.id))
+            }))
         })
         .catch(error => {
             handleNetworkAppError(dispatch, error)

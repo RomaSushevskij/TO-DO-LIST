@@ -17,7 +17,7 @@ import {Login} from './components/Login/Login';
 import {useDispatch} from 'react-redux';
 import {Preloader} from './components/Preloader/Preloader';
 import {logout} from './store/reducers/auth/authReducer';
-
+import style from './App.module.css'
 function App() {
     const dispatch = useDispatch()
     useEffect(() => {
@@ -50,8 +50,10 @@ function App() {
                     </Typography>
                     {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
                 </Toolbar>
-                {status === 'loading' && <LinearProgress color={'warning'}/>}
             </AppBar>
+            <div className={style.progressBar}>
+                {status === 'loading' && <LinearProgress/>}
+            </div>
             <Container fixed>
                 <Routes>
                     <Route path={'/'} element={<TodolistList/>}/>

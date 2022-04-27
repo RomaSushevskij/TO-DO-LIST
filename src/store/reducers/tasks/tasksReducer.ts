@@ -1,6 +1,6 @@
 import {
     AddTodolistType,
-    RemoveTodolistType,
+    RemoveTodolistType, ResetTodolistsDataType,
     SetTodolistsType,
     TODOLISTS_ACTIONS_TYPES
 } from "../todolists/todolistReducer";
@@ -60,6 +60,8 @@ export const tasksReducer = (state: TasksType = initialState, action: GeneralTas
                 [action.payload.todolistID]: action.payload.tasks
             }
         }
+        case TODOLISTS_ACTIONS_TYPES.RESET_TODOLISTS_DATA:
+            return {}
         default:
             return state
     }
@@ -76,6 +78,7 @@ export type GeneralTasksACType =
     | SetTodolistsType
     | ReturnType<typeof setTasksAC>
     | ReturnType<typeof updateTaskAC>
+    | ResetTodolistsDataType
 
 
 // A C T I O N S

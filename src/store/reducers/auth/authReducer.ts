@@ -3,6 +3,7 @@ import {setAppStatusAC} from '../app/appReducer';
 import {authAPI, LoginPayloadDataType, RESULT_CODES} from '../../../api/todolist-api';
 import {AxiosError} from 'axios';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
+import {resetTodolistsDataAC} from '../todolists/todolistReducer';
 
 export enum AUTH_ACTIONS_TYPES {
     SET_IS_LOGGED_IN = 'AUTH/SET_IS_LOGGED_IN'
@@ -60,6 +61,7 @@ export const logout = (): AppThunk => dispatch => {
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
                 dispatch(setIsLoggedInAC(false))
+                dispatch(resetTodolistsDataAC())
             } else {
                 handleServerAppError(dispatch, data)
             }
