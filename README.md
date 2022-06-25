@@ -1,5 +1,5 @@
 # To-Do List app
-![Header]()
+![Header](https://github.com/RomaSushevskij/TO-DO-LIST/blob/main/src/assets/preview.png?raw=true)
 
 Simple todo list with storage of data on remote server.
 
@@ -18,4 +18,4 @@ Simple todo list with storage of data on remote server.
 - :octocat: Deployed app to gitHub Pages
 
 ## Demo 
-:link: [Link to Demo App](https://RomaSushevskij.github.io/MovieDatabase) 
+:link: [Link to Demo App](https://romasushevskij.github.io/TO-DO-LIST) 
