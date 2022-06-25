@@ -27,13 +27,13 @@ export const TodolistList = () => {
 
     return (
         <>
-            <Grid container  style={{justifyContent: 'center', margin: '20px 0', marginBottom:'30px'}}>
+            <Grid container style={{justifyContent: 'center', margin: '20px 0', marginBottom: '30px'}}>
                 <InputWithButton inputLabel={'Todolist title'}
                                  buttonName={'x'}
                                  addItem={addTodolist}/>
             </Grid>
             <Grid container spacing={5}
-                  style={{justifyContent: 'center', marginBottom:'30px'}}>
+                  style={{justifyContent: 'center', marginBottom: '30px'}}>
                 {todolists.map(td => {
                     return (
                         <Grid key={td.id} item>
