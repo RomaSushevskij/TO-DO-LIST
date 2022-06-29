@@ -4,46 +4,32 @@ import {authAPI, LoginPayloadDataType, RESULT_CODES} from '../../../api/todolist
 import {AxiosError} from 'axios';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
 import {resetTodolistsDataAC} from '../todolists/todolistReducer';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {Dispatch} from 'redux';
 
-export enum AUTH_ACTIONS_TYPES {
-    SET_IS_LOGGED_IN = 'AUTH/SET_IS_LOGGED_IN'
-}
 
 const initialState = {
     isLoggedIn: false
-}
-export type AuthInitialStateType = typeof initialState
-
-export const authReducer = (state: AuthInitialStateType = initialState, action: GeneralAuthACType): AuthInitialStateType => {
-    switch (action.type) {
-        case AUTH_ACTIONS_TYPES.SET_IS_LOGGED_IN:
-            return {
-                ...state, ...action.payload
-            }
-        default:
-            return state
-    }
 };
-
-
-export type GeneralAuthACType =
-    |ReturnType<typeof setIsLoggedInAC>
-
-
-// A C T I O N S
-export const setIsLoggedInAC = (isLoggedIn: boolean) => ({
-    type: AUTH_ACTIONS_TYPES.SET_IS_LOGGED_IN,
-    payload: {isLoggedIn}
-} as const);
-
-
+const slice = createSlice({
+    name:'auth',
+    initialState,
+    reducers: {
+        setIsLoggedIn(state, action:PayloadAction<{isLoggedIn: boolean}>) {
+            state.isLoggedIn = action.payload.isLoggedIn;
+        }
+    }
+});
+export type AuthInitialStateType = typeof initialState;
+export const {setIsLoggedIn} = slice.actions;
+export const authReducer = slice.reducer;
 // T H U N K S
-export const login = (data: Omit<LoginPayloadDataType, 'captcha'>): AppThunk => (dispatch) => {
+export const login = (data: Omit<LoginPayloadDataType, 'captcha'>) => (dispatch:Dispatch) => {
     dispatch(setAppStatusAC('loading'))
     authAPI.login(data)
         .then((data) => {
             if (data.resultCode === RESULT_CODES.success) {
-                dispatch(setIsLoggedInAC(true))
+                dispatch(slice.actions.setIsLoggedIn({isLoggedIn: true}))
             } else {
                 handleServerAppError(dispatch, data)
             }
@@ -54,13 +40,13 @@ export const login = (data: Omit<LoginPayloadDataType, 'captcha'>): AppThunk => 
         .finally(() => {
             dispatch(setAppStatusAC('succeeded'))
         })
-}
-export const logout = (): AppThunk => dispatch => {
+};
+export const logout = () => (dispatch:Dispatch) => {
     dispatch(setAppStatusAC('idle'))
     authAPI.logout()
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
-                dispatch(setIsLoggedInAC(false))
+                dispatch(slice.actions.setIsLoggedIn({isLoggedIn:false}))
                 dispatch(resetTodolistsDataAC())
             } else {
                 handleServerAppError(dispatch, data)
@@ -72,5 +58,5 @@ export const logout = (): AppThunk => dispatch => {
         .finally(() => {
             dispatch(setAppStatusAC('succeeded'))
         })
-}
+};
 

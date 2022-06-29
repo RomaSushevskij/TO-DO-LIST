@@ -1,6 +1,6 @@
 import {AppThunk, NullableType} from '../../store';
 import {authAPI, RESULT_CODES} from '../../../api/todolist-api';
-import {setIsLoggedInAC} from '../auth/authReducer';
+import {setIsLoggedIn} from '../auth/authReducer';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
 import {AxiosError} from 'axios';
 
@@ -48,7 +48,7 @@ export const initializeApp = (): AppThunk => dispatch => {
     authAPI.me()
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
-                dispatch(setIsLoggedInAC(true))
+                dispatch(setIsLoggedIn({isLoggedIn:true}))
             } else {
                 handleServerAppError(dispatch, data)
             }

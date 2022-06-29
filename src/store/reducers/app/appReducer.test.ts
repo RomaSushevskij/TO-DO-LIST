@@ -31,6 +31,6 @@ test('correct error message should be set to state', () => {
 });
 test('correct value of property isInitialized should be set to state', () => {
     const endState = appReducer(startState, setIsInitializedAppAC(true))
-    expect(startState.isInitialized).toBeFalsy()
-    expect(endState.isInitialized).toBeTruthy()
+    expect(startState.isInitialized).toBeFalsy();
+    expect(endState.isInitialized).toBeTruthy();
 });
