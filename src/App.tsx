@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {useAppSelector} from "./store/store";
+import {useAppDispatch, useAppSelector} from "./store/store";
 import LinearProgress from '@mui/material/LinearProgress';
 import {initializeApp, RequestStatusType} from './store/reducers/app/appReducer';
 import {ErrorSnackbar} from './components/ErrorSnackar/ErrorSnackbar';
@@ -14,13 +14,12 @@ import {TodolistList} from './components/TodolistList/TodolistList';
 import Container from '@mui/material/Container';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Login} from './components/Login/Login';
-import {useDispatch} from 'react-redux';
 import {Preloader} from './components/Preloader/Preloader';
 import {logout} from './store/reducers/auth/authReducer';
 import style from './App.module.css'
 
 function App() {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(initializeApp())
     }, [])

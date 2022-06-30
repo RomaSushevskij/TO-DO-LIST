@@ -1,12 +1,13 @@
 import {
     AddTodolistType,
-    RemoveTodolistType, ResetTodolistsDataType,
+    RemoveTodolistType,
+    ResetTodolistsDataType,
     SetTodolistsType,
     TODOLISTS_ACTIONS_TYPES
 } from "../todolists/todolistReducer";
 import {RESULT_CODES, TaskType, todolistAPI, UpdateTaskModelType} from "../../../api/todolist-api";
-import {AppThunk} from '../../store';
-import {setAppStatusAC} from '../app/appReducer';
+import {AppDispatch, AppGetState} from '../../store';
+import {setAppStatus} from '../app/appReducer';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
 
 export enum TASKS_ACTIONS_TYPES {
@@ -100,8 +101,8 @@ export const updateTaskAC = (todolistId: string, taskId: string, model: UpdateTa
 } as const);
 
 // T H U N K S
-export const getTasks = (todolistID: string): AppThunk => (dispatch) => {
-    dispatch(setAppStatusAC('loading'))
+export const getTasks = (todolistID: string) => (dispatch: AppDispatch) => {
+    dispatch(setAppStatus({status: 'loading'}))
     todolistAPI.getTasks(todolistID)
         .then(data => {
             dispatch(setTasksAC(data.items, todolistID))
@@ -110,11 +111,11 @@ export const getTasks = (todolistID: string): AppThunk => (dispatch) => {
             handleNetworkAppError(dispatch, error)
         })
         .finally(() => {
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatus({status: 'succeeded'}))
         })
 }
-export const removeTask = (todolistId: string, taskId: string): AppThunk => dispatch => {
-    dispatch(setAppStatusAC('loading'))
+export const removeTask = (todolistId: string, taskId: string) => (dispatch: AppDispatch) => {
+    dispatch(setAppStatus({status: 'loading'}))
     todolistAPI.removeTask(todolistId, taskId)
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
@@ -127,11 +128,11 @@ export const removeTask = (todolistId: string, taskId: string): AppThunk => disp
             handleNetworkAppError(dispatch, error)
         })
         .finally(() => {
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatus({status: 'succeeded'}))
         })
 }
-export const addTask = (todolistId: string, title: string): AppThunk => dispatch => {
-    dispatch(setAppStatusAC('loading'))
+export const addTask = (todolistId: string, title: string) => (dispatch: AppDispatch) => {
+    dispatch(setAppStatus({status: 'loading'}))
     todolistAPI.createTask(todolistId, title)
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
@@ -144,7 +145,7 @@ export const addTask = (todolistId: string, title: string): AppThunk => dispatch
             handleNetworkAppError(dispatch, error)
         })
         .finally(() => {
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatus({status: 'succeeded'}))
         })
 }
 
@@ -156,7 +157,7 @@ export type UpdateTaskDomainModelType = {
     startDate?: string
     deadline?: string
 }
-export const updateTask = (todolistId: string, taskId: string, model: UpdateTaskDomainModelType): AppThunk => (dispatch, getState) => {
+export const updateTask = (todolistId: string, taskId: string, model: UpdateTaskDomainModelType) => (dispatch: AppDispatch, getState: AppGetState) => {
     const currentTask = getState().tasks[todolistId].find(task => task.id === taskId)
     if (currentTask) {
         const modelStatus: UpdateTaskModelType = {
@@ -168,7 +169,7 @@ export const updateTask = (todolistId: string, taskId: string, model: UpdateTask
             title: currentTask.title,
             ...model
         }
-        dispatch(setAppStatusAC('loading'))
+        dispatch(setAppStatus({status: 'loading'}))
         todolistAPI.updateTask(todolistId, taskId, modelStatus)
             .then(data => {
                 if (data.resultCode === RESULT_CODES.success) {
@@ -181,7 +182,7 @@ export const updateTask = (todolistId: string, taskId: string, model: UpdateTask
                 handleNetworkAppError(dispatch, error)
             })
             .finally(() => {
-                dispatch(setAppStatusAC('succeeded'))
+                dispatch(setAppStatus({status: 'succeeded'}))
             })
     }
 }

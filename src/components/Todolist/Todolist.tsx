@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import {useDispatch, useSelector} from "react-redux";
-import {AppStateType, useAppSelector} from "../../store/store";
+import {AppStateType, useAppDispatch, useAppSelector} from "../../store/store";
 import {addTask} from "../../store/reducers/tasks/tasksReducer";
 import {
     changeFilterAC,
@@ -30,7 +30,7 @@ export const Todolist = (props: TodolistPropsType) => {
     const selectTodolist = (state: AppStateType) => state.todolists.filter(td => td.id === props.todolistID)[0]
     const todolist:TodolistType = useSelector(selectTodolist)
     const tasks = useAppSelector<TaskType[]>(state=>state.tasks[props.todolistID])
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch();
 
     //functionality for removing todolists
     const onClickRemovingTodolistHandler = () => {

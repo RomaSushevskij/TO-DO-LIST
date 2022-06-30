@@ -1,11 +1,12 @@
-import {setAppErrorMessageAC} from '../store/reducers/app/appReducer';
-import {Dispatch} from 'redux';
-import {AppActionsType} from '../store/store';
-import {ResponseType, TaskType, TodolistResponseType} from '../api/todolist-api';
+import {setAppErrorMessage} from '../store/reducers/app/appReducer';
+import {ResponseType} from '../api/todolist-api';
+import {AppDispatch} from '../store/store';
 
-export const handleNetworkAppError = (dispatch: Dispatch<AppActionsType>, error: { message: string }) => {
-    dispatch(setAppErrorMessageAC(error.message ? error.message : 'Some error'))
-}
-export const handleServerAppError = <T>(dispatch: Dispatch<AppActionsType>, data: ResponseType<T>) => {
-    dispatch(setAppErrorMessageAC(data.messages.length ? data.messages[0] : 'Some error occurred'))
-}
+export const handleNetworkAppError = (dispatch: AppDispatch, error: { message: string }) => {
+    const errorMessage = error.message ? error.message : 'Some error';
+    dispatch(setAppErrorMessage({errorMessage}))
+};
+export const handleServerAppError = <T>(dispatch: AppDispatch, data: ResponseType<T>) => {
+    const errorMessage = data.messages.length ? data.messages[0] : 'Some error occurred';
+    dispatch(setAppErrorMessage({errorMessage}))
+};
