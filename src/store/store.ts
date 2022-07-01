@@ -1,5 +1,5 @@
 import {GeneralTasksACType, tasksReducer} from "./reducers/tasks/tasksReducer";
-import {GeneralTodolistsACType, todolistsReducer} from "./reducers/todolists/todolistReducer";
+import {todolistsReducer} from "./reducers/todolists/todolistReducer";
 import {combineReducers} from 'redux'
 import thunk, {ThunkAction} from 'redux-thunk'
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
@@ -21,7 +21,6 @@ export type AppStateType = ReturnType<typeof rootReducer>
 export type AppGetState = typeof store.getState;
 export type AppActionsType =
     | GeneralTasksACType
-    | GeneralTodolistsACType
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,
     AppStateType,
     unknown,

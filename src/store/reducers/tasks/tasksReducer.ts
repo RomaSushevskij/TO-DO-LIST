@@ -1,11 +1,20 @@
 import {
+    addTodolist,
     AddTodolistType,
+    deleteTodolist,
     RemoveTodolistType,
+    resetTodolistsData,
     ResetTodolistsDataType,
+    setToDoLists,
     SetTodolistsType,
-    TODOLISTS_ACTIONS_TYPES
 } from "../todolists/todolistReducer";
-import {RESULT_CODES, TaskType, todolistAPI, UpdateTaskModelType} from "../../../api/todolist-api";
+import {
+    RESULT_CODES,
+    TaskType,
+    todolistAPI,
+    TodolistResponseType,
+    UpdateTaskModelType
+} from "../../../api/todolist-api";
 import {AppDispatch, AppGetState} from '../../store';
 import {setAppStatus} from '../app/appReducer';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
@@ -23,7 +32,7 @@ export type TasksType = {
 
 const initialState: TasksType = {}
 
-export const tasksReducer = (state: TasksType = initialState, action: GeneralTasksACType): TasksType => {
+export const tasksReducer = (state: TasksType = initialState, action: any): TasksType => {
     switch (action.type) {
         case TASKS_ACTIONS_TYPES.ADD_TASK:
             return {
@@ -42,17 +51,18 @@ export const tasksReducer = (state: TasksType = initialState, action: GeneralTas
                     .map(task => task.id === action.payload.taskId ?
                         {...task, ...action.payload.model} : task)
             }
-        case TODOLISTS_ACTIONS_TYPES.ADD_TODOLIST:
+        case addTodolist.type:
             return {
                 ...state, [action.payload.todolist.id]: []
             }
-        case TODOLISTS_ACTIONS_TYPES.REMOVE_TODOLIST:
+        case deleteTodolist.type:
             const stateCopy = {...state}
             delete stateCopy[action.payload.todolistID]
             return stateCopy
-        case TODOLISTS_ACTIONS_TYPES.SET_TODOLISTS: {
+        case setToDoLists.type: {
             const stateCopy = {...state}
-            action.payload.todolists.forEach(td => stateCopy[td.id] = [])
+            debugger
+            action.payload.todolists.forEach((td: TodolistResponseType) => stateCopy[td.id] = [])
             return stateCopy
         }
         case TASKS_ACTIONS_TYPES.SET_TASKS: {
@@ -61,13 +71,12 @@ export const tasksReducer = (state: TasksType = initialState, action: GeneralTas
                 [action.payload.todolistID]: action.payload.tasks
             }
         }
-        case TODOLISTS_ACTIONS_TYPES.RESET_TODOLISTS_DATA:
+        case resetTodolistsData.type:
             return {}
         default:
             return state
     }
 };
-
 export type AddTaskType = ReturnType<typeof addTaskAC>
 export type RemoveTaskType = ReturnType<typeof removeTaskAC>
 

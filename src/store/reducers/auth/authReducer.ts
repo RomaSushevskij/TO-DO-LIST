@@ -2,7 +2,7 @@ import {setAppStatus} from '../app/appReducer';
 import {authAPI, LoginPayloadDataType, RESULT_CODES} from '../../../api/todolist-api';
 import {AxiosError} from 'axios';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
-import {resetTodolistsDataAC} from '../todolists/todolistReducer';
+import {resetTodolistsData} from '../todolists/todolistReducer';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Dispatch} from 'redux';
 import {AppDispatch} from '../../store';
@@ -48,7 +48,7 @@ export const logout = () => (dispatch: AppDispatch) => {
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
                 dispatch(setIsLoggedIn({isLoggedIn: false}))
-                dispatch(resetTodolistsDataAC())
+                dispatch(resetTodolistsData())
             } else {
                 handleServerAppError(dispatch, data)
             }
