@@ -9,7 +9,7 @@ import Close from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
 import {useSelector} from "react-redux";
 import {AppStateType, useAppDispatch, useAppSelector} from "../../store/store";
-import {addTask} from "../../store/reducers/tasks/tasksReducer";
+import {createTask} from "../../store/reducers/tasks/tasksReducer";
 import {
     changeFilter,
     FilterValueType,
@@ -43,7 +43,7 @@ export const Todolist = (props: TodolistPropsType) => {
 
     //functionality for adding tasks
     const onClickAddTaskHandler = (newTitleTask: string) => {
-        dispatch(addTask(props.todolistID, newTitleTask));
+        dispatch(createTask(props.todolistID, newTitleTask));
     }
 
     //functionality for update todolist

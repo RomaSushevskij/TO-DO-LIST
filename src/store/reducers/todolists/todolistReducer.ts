@@ -34,10 +34,11 @@ const slice = createSlice({
             }
         },
         deleteTodolist(state, action: PayloadAction<{ todolistID: string }>) {
-            const todoIndex = state.findIndex(td => td.id !== action.payload.todolistID);
+            const todoIndex = state.findIndex(td => td.id === action.payload.todolistID);
             if (todoIndex > -1) {
                 state.splice(todoIndex, 1);
             }
+            debugger
         },
         addTodolist(state, action: PayloadAction<{ todolist: TodolistResponseType }>) {
             state.unshift({...action.payload.todolist, filter: "All", entityStatus: 'idle'});

@@ -1,10 +1,4 @@
-import {
-    addTaskAC,
-    removeTaskAC,
-    setTasksAC,
-    tasksReducer,
-    TasksType, updateTaskAC,
-} from "./tasksReducer";
+import {addTask, changeTask, deleteTask, setTasks, tasksReducer, TasksType,} from "./tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../../api/todolist-api";
 
 let startState: TasksType
@@ -80,7 +74,7 @@ beforeEach(() => {
 
 test('correct task should be deleted from correct array', () => {
 
-    const action = removeTaskAC("todolistId2", "2");
+    const action = deleteTask({todolistID: "todolistId2", id: "2"});
 
     const endState: TasksType = tasksReducer(startState, action)
 
@@ -153,7 +147,7 @@ test('correct task should be added to correct array', () => {
         startDate: '',
         todoListId: 'todolistId2',
     }
-    const action = addTaskAC(newTask);
+    const action = addTask({task: newTask});
 
     const endState = tasksReducer(startState, action)
 
@@ -166,7 +160,7 @@ test('correct task should be added to correct array', () => {
 
 test('status of specified task should be changed', () => {
 
-    const action = updateTaskAC("todolistId2", "2", {status:TaskStatuses.New});
+    const action = changeTask({todolistId: "todolistId2", taskId: "2", model: {status: TaskStatuses.New}});
 
     const endState = tasksReducer(startState, action)
 
@@ -176,7 +170,7 @@ test('status of specified task should be changed', () => {
 
 test('title of specified task should be changed', () => {
 
-    const action = updateTaskAC("todolistId2", "2", {title:'new title'});
+    const action = changeTask({todolistId: "todolistId2", taskId: "2", model: {title: 'new title'}});
 
     const endState = tasksReducer(startState, action)
 
@@ -196,7 +190,7 @@ test('tasks for current todolist should be added to state', () => {
             todoListId: "todolistId1",
         }
     ]
-    const endState = tasksReducer(startState, setTasksAC(tasks, "todolistId1" ))
+    const endState = tasksReducer(startState, setTasks({todolistID: "todolistId1", tasks}))
 
     expect(endState).toStrictEqual({...startState, "todolistId1": tasks})
 

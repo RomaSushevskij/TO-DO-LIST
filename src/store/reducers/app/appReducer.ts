@@ -1,10 +1,9 @@
-import {AppDispatch, AppThunk, NullableType} from '../../store';
+import {AppDispatch, NullableType} from '../../store';
 import {authAPI, RESULT_CODES} from '../../../api/todolist-api';
 import {setIsLoggedIn} from '../auth/authReducer';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
 import {AxiosError} from 'axios';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {Dispatch} from 'redux';
 
 const initialAppState = {
     status: 'idle' as RequestStatusType,
@@ -32,7 +31,7 @@ export const {setAppStatus, setAppErrorMessage, setIsInitializedApp} = slice.act
 
 
 // T H U N K S
-export const initializeApp = () => (dispatch:AppDispatch) => {
+export const initializeApp = () => (dispatch: AppDispatch) => {
     authAPI.me()
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
@@ -45,7 +44,7 @@ export const initializeApp = () => (dispatch:AppDispatch) => {
             handleNetworkAppError(dispatch, error)
         })
         .finally(() => {
-            dispatch(setIsInitializedApp({isInitialized:true}))
+            dispatch(setIsInitializedApp({isInitialized: true}))
         })
 }
 

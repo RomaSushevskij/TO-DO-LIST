@@ -1,7 +1,7 @@
-import {GeneralTasksACType, tasksReducer} from "./reducers/tasks/tasksReducer";
+import {tasksReducer} from "./reducers/tasks/tasksReducer";
 import {todolistsReducer} from "./reducers/todolists/todolistReducer";
 import {combineReducers} from 'redux'
-import thunk, {ThunkAction} from 'redux-thunk'
+import thunk from 'redux-thunk'
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import {appReducer} from './reducers/app/appReducer';
 import {authReducer} from './reducers/auth/authReducer';
@@ -19,12 +19,6 @@ export const store = configureStore({
 })
 export type AppStateType = ReturnType<typeof rootReducer>
 export type AppGetState = typeof store.getState;
-export type AppActionsType =
-    | GeneralTasksACType
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,
-    AppStateType,
-    unknown,
-    AppActionsType>
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<AppStateType> = useSelector;
