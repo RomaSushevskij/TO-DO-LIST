@@ -1,4 +1,4 @@
-import {addTask, changeTask, deleteTask, getTasks, tasksReducer, TasksType,} from "./tasksReducer";
+import {createTask, getTasks, removeTask, tasksReducer, TasksType, updateTask,} from "./tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../../api/todolist-api";
 
 let startState: TasksType
@@ -74,7 +74,8 @@ beforeEach(() => {
 
 test('correct task should be deleted from correct array', () => {
 
-    const action = deleteTask({todolistID: "todolistId2", id: "2"});
+    const payload = {todolistId: "todolistId2", taskId: "2"};
+    const action = removeTask.fulfilled(payload, 'requestId', payload);
 
     const endState: TasksType = tasksReducer(startState, action)
 
@@ -147,7 +148,8 @@ test('correct task should be added to correct array', () => {
         startDate: '',
         todoListId: 'todolistId2',
     }
-    const action = addTask({task: newTask});
+    const payload = {task: newTask};
+    const action = createTask.fulfilled(payload, 'requestId', {todolistId: newTask.todoListId, title: newTask.title});
 
     const endState = tasksReducer(startState, action)
 
@@ -160,7 +162,8 @@ test('correct task should be added to correct array', () => {
 
 test('status of specified task should be changed', () => {
 
-    const action = changeTask({todolistId: "todolistId2", taskId: "2", model: {status: TaskStatuses.New}});
+    const payload = {todolistId: "todolistId2", taskId: "2", model: {status: TaskStatuses.New}};
+    const action = updateTask.fulfilled(payload, 'requestId', payload);
 
     const endState = tasksReducer(startState, action)
 
@@ -170,7 +173,8 @@ test('status of specified task should be changed', () => {
 
 test('title of specified task should be changed', () => {
 
-    const action = changeTask({todolistId: "todolistId2", taskId: "2", model: {title: 'new title'}});
+    const payload = {todolistId: "todolistId2", taskId: "2", model: {title: 'new title'}};
+    const action = updateTask.fulfilled(payload, 'requestId', payload);
 
     const endState = tasksReducer(startState, action)
 
@@ -190,7 +194,10 @@ test('tasks for current todolist should be added to state', () => {
             todoListId: "todolistId1",
         }
     ]
-    const endState = tasksReducer(startState, getTasks.fulfilled({todolistID: "todolistId1", tasks}, 'requestGetTasksID', "todolistId1"))
+    const endState = tasksReducer(startState, getTasks.fulfilled({
+        todolistId: "todolistId1",
+        tasks
+    }, 'requestGetTasksID', "todolistId1"))
 
     expect(endState).toStrictEqual({...startState, "todolistId1": tasks})
 

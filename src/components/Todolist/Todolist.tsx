@@ -43,8 +43,8 @@ export const Todolist = (props: TodolistPropsType) => {
 
     //functionality for adding tasks
     const onClickAddTaskHandler = (newTitleTask: string) => {
-        dispatch(createTask(props.todolistID, newTitleTask));
-    }
+        dispatch(createTask({todolistId: props.todolistID, title: newTitleTask}));
+    };
 
     //functionality for update todolist
     const onUpdateTodolistTitle = (newTitle: string) => {

@@ -64,18 +64,19 @@ const slice = createSlice({
     },
 });
 export const todolistsReducer = slice.reducer;
-export const {changeFilter,
+export const {
+    changeFilter,
     deleteTodolist,
     addTodolist,
     changeTodolistTitle,
     setToDoLists,
     changeToDoListsEntityStatus,
-    resetTodolistsData} = slice.actions;
-export type AddTodolistType = ReturnType<typeof  addTodolist>
+    resetTodolistsData
+} = slice.actions;
+export type AddTodolistType = ReturnType<typeof addTodolist>
 export type RemoveTodolistType = ReturnType<typeof deleteTodolist>
 export type SetTodolistsType = ReturnType<typeof setToDoLists>
 export type ResetTodolistsDataType = ReturnType<typeof resetTodolistsData>
-
 
 
 // T H U N K S
@@ -83,7 +84,7 @@ export const getToDoLists = () => (dispatch: AppDispatch) => {
     dispatch(setAppStatus({status: 'loading'}));
     todolistAPI.getTodolists()
         .then(data => {
-            dispatch(setToDoLists({todolists:data}))
+            dispatch(setToDoLists({todolists: data}))
             return data
         })
         .then(data => {
@@ -103,7 +104,7 @@ export const createTodolist = (title: string) => (dispatch: AppDispatch) => {
     todolistAPI.createTodolist(title)
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
-                dispatch(addTodolist({todolist:data.data.item}))
+                dispatch(addTodolist({todolist: data.data.item}))
             } else {
                 handleServerAppError(dispatch, data)
             }
@@ -118,11 +119,11 @@ export const createTodolist = (title: string) => (dispatch: AppDispatch) => {
 }
 export const removeTodolist = (todolistId: string) => (dispatch: AppDispatch) => {
     dispatch(setAppStatus({status: 'loading'}))
-    dispatch(changeToDoListsEntityStatus({todolistId:todolistId, entityStatus:'loading'}, ))
+    dispatch(changeToDoListsEntityStatus({todolistId: todolistId, entityStatus: 'loading'},))
     todolistAPI.deleteTodolist(todolistId)
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
-                dispatch(deleteTodolist({todolistID:todolistId}))
+                dispatch(deleteTodolist({todolistID: todolistId}))
             } else {
                 handleServerAppError(dispatch, data)
             }
@@ -132,7 +133,7 @@ export const removeTodolist = (todolistId: string) => (dispatch: AppDispatch) =>
         })
         .finally(() => {
             dispatch(setAppStatus({status: 'succeeded'}))
-            dispatch(changeToDoListsEntityStatus({todolistId: todolistId, entityStatus:'succeeded'}))
+            dispatch(changeToDoListsEntityStatus({todolistId: todolistId, entityStatus: 'succeeded'}))
         })
 }
 export const updateTodolistTitle = (todolistId: string, title: string) => (dispatch: AppDispatch) => {
@@ -140,7 +141,7 @@ export const updateTodolistTitle = (todolistId: string, title: string) => (dispa
     todolistAPI.updateTodolist(todolistId, title)
         .then(data => {
             if (data.resultCode === RESULT_CODES.success) {
-                dispatch(changeTodolistTitle({todolistID:todolistId, newTitle:title}, ))
+                dispatch(changeTodolistTitle({todolistID: todolistId, newTitle: title},))
             } else {
                 handleServerAppError(dispatch, data)
             }

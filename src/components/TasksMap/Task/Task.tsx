@@ -22,18 +22,18 @@ export const Task = React.memo(({
     const task = useSelector<AppStateType, TaskType>(state => {
         return state.tasks[todolistID].filter(task => task.id === taskID)[0]
     })
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
 
-    const onUpdateTaskTitleHandler = useCallback((newTitle: string) => {
-        dispatch(updateTask(todolistID, taskID, {title: newTitle}))
+    const onUpdateTaskTitleHandler = useCallback((title: string) => {
+        dispatch(updateTask({todolistId: todolistID, taskId: taskID, model:{title}}))
     }, [dispatch, todolistID, taskID]);
 
     const onUpdateTaskStatus = useCallback((event) => {
         const status = event.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New;
-        dispatch(updateTask(todolistID, taskID, {status}))
+        dispatch(updateTask({todolistId:todolistID, taskId: taskID, model: {status}}))
     }, [dispatch, todolistID, taskID])
     const onClickRemovingTaskHandler = useCallback(() => {
-        dispatch(removeTask(todolistID, taskID))
+        dispatch(removeTask({todolistId:todolistID, taskId:taskID}))
     }, [dispatch, todolistID, taskID])
 
     return (
