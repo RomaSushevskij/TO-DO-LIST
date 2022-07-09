@@ -1,4 +1,4 @@
-import {addTask, changeTask, deleteTask, setTasks, tasksReducer, TasksType,} from "./tasksReducer";
+import {addTask, changeTask, deleteTask, getTasks, tasksReducer, TasksType,} from "./tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../../api/todolist-api";
 
 let startState: TasksType
@@ -190,7 +190,7 @@ test('tasks for current todolist should be added to state', () => {
             todoListId: "todolistId1",
         }
     ]
-    const endState = tasksReducer(startState, setTasks({todolistID: "todolistId1", tasks}))
+    const endState = tasksReducer(startState, getTasks.fulfilled({todolistID: "todolistId1", tasks}, 'requestGetTasksID', "todolistId1"))
 
     expect(endState).toStrictEqual({...startState, "todolistId1": tasks})
 
