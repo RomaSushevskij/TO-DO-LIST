@@ -1,10 +1,9 @@
 import {
     appReducer,
-    InitialAppStateType,
+    InitialAppStateType, initializeApp,
     RequestStatusType,
     setAppErrorMessage,
     setAppStatus,
-    setIsInitializedApp
 } from './appReducer';
 import {NullableType} from '../../store';
 
@@ -30,7 +29,7 @@ test('correct error message should be set to state', () => {
     expect(endState.errorMessage).toBe(newErrorMessage)
 });
 test('correct value of property isInitialized should be set to state', () => {
-    const endState = appReducer(startState, setIsInitializedApp({isInitialized: true}))
+    const endState = appReducer(startState, initializeApp.fulfilled(undefined, 'requestId'))
     expect(startState.isInitialized).toBeFalsy();
     expect(endState.isInitialized).toBeTruthy();
 });

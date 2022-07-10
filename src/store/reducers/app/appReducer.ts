@@ -3,7 +3,27 @@ import {authAPI, RESULT_CODES} from '../../../api/todolist-api';
 import {setIsLoggedIn} from '../auth/authReducer';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
 import {AxiosError} from 'axios';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
+export type InitialAppStateType = typeof initialAppState;
+
+// T H U N K S
+export const initializeApp = createAsyncThunk('app/initializeApp', async (_, {dispatch, rejectWithValue})=>{
+    try {
+        const data = await  authAPI.me();
+        if (data.resultCode === RESULT_CODES.success) {
+            dispatch(setIsLoggedIn({isLoggedIn: true}));
+        } else {
+            handleServerAppError(dispatch, data);
+            return rejectWithValue(null)
+        }
+    } catch (e) {
+        const error = e as AxiosError;
+        handleNetworkAppError(dispatch, error);
+        return rejectWithValue(null)
+    }
+});
 
 const initialAppState = {
     status: 'idle' as RequestStatusType,
@@ -21,33 +41,15 @@ const slice = createSlice({
         setAppErrorMessage(state, action: PayloadAction<{ errorMessage: NullableType<string> }>) {
             state.errorMessage = action.payload.errorMessage;
         },
-        setIsInitializedApp(state, action: PayloadAction<{ isInitialized: boolean }>) {
-            state.isInitialized = action.payload.isInitialized;
-        },
+    },
+    extraReducers:builder => {
+        builder.addCase(initializeApp.fulfilled, (state, action)=>{
+            state.isInitialized = true;
+        })
     }
 });
+
 export const appReducer = slice.reducer;
-export const {setAppStatus, setAppErrorMessage, setIsInitializedApp} = slice.actions;
+export const {setAppStatus, setAppErrorMessage} = slice.actions;
 
 
-// T H U N K S
-export const initializeApp = () => (dispatch: AppDispatch) => {
-    authAPI.me()
-        .then(data => {
-            if (data.resultCode === RESULT_CODES.success) {
-                dispatch(setIsLoggedIn({isLoggedIn: true}))
-            } else {
-                handleServerAppError(dispatch, data)
-            }
-        })
-        .catch((error: AxiosError) => {
-            handleNetworkAppError(dispatch, error)
-        })
-        .finally(() => {
-            dispatch(setIsInitializedApp({isInitialized: true}))
-        })
-}
-
-
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
-export type InitialAppStateType = typeof initialAppState;
