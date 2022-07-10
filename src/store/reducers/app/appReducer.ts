@@ -1,17 +1,17 @@
-import {AppDispatch, NullableType} from '../../store';
+import {NullableType} from '../../store';
 import {authAPI, RESULT_CODES} from '../../../api/todolist-api';
-import {setIsLoggedIn} from '../auth/authReducer';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
 import {AxiosError} from 'axios';
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {setIsLoggedIn} from '../auth/authReducer';
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
 export type InitialAppStateType = typeof initialAppState;
 
 // T H U N K S
-export const initializeApp = createAsyncThunk('app/initializeApp', async (_, {dispatch, rejectWithValue})=>{
+export const initializeApp = createAsyncThunk('app/initializeApp', async (_, {dispatch, rejectWithValue}) => {
     try {
-        const data = await  authAPI.me();
+        const data = await authAPI.me();
         if (data.resultCode === RESULT_CODES.success) {
             dispatch(setIsLoggedIn({isLoggedIn: true}));
         } else {
@@ -22,6 +22,8 @@ export const initializeApp = createAsyncThunk('app/initializeApp', async (_, {di
         const error = e as AxiosError;
         handleNetworkAppError(dispatch, error);
         return rejectWithValue(null)
+    } finally {
+
     }
 });
 
@@ -42,10 +44,13 @@ const slice = createSlice({
             state.errorMessage = action.payload.errorMessage;
         },
     },
-    extraReducers:builder => {
-        builder.addCase(initializeApp.fulfilled, (state, action)=>{
+    extraReducers: builder => {
+        builder.addCase(initializeApp.fulfilled, state => {
             state.isInitialized = true;
-        })
+        });
+        builder.addCase(initializeApp.rejected, state => {
+            state.isInitialized = true;
+        });
     }
 });
 

@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import {InputWithButton} from "../InputWithButton/InputWithButton"
 import {Todolist} from '../Todolist/Todolist';
 import {createTodolist, getToDoLists, TodolistType} from '../../store/reducers/todolists/todolistReducer';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {AppStateType, useAppDispatch, useAppSelector} from '../../store/store';
 import {Navigate} from 'react-router-dom';
 import {useEffect} from 'react';

@@ -6,9 +6,10 @@ export type TodolistResponseType = {
     order: number
     title: string
 }
+export type FieldErrorType = { error: string, field: string };
 export type ResponseType<T = {}> = {
     data: T
-    fieldsErrors: string[]
+    fieldsErrors: FieldErrorType[]
     messages: string[]
     resultCode: number
 }
@@ -79,7 +80,7 @@ const todoInstance = axios.create({
     headers: {
         "api-key": "10732160-f45a-4879-8e6f-b2819bc13c24"
     }
-})
+});
 
 
 export const todolistAPI = {
@@ -131,7 +132,7 @@ export const todolistAPI = {
                 return response.data
             })
     }
-}
+};
 export const authAPI = {
     login(data: LoginPayloadDataType) {
         return todoInstance.post<ResponseType, AxiosResponse<ResponseType<{ userId: number }>>, LoginPayloadDataType>('auth/login', data)

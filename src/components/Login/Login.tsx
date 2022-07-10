@@ -9,33 +9,41 @@ import FormLabel from "@mui/material/FormLabel";
 import {useFormik} from 'formik';
 import style from './Login.module.css';
 import {LoginPayloadDataType} from '../../api/todolist-api';
-import {useDispatch} from 'react-redux';
 import {login} from '../../store/reducers/auth/authReducer';
-import {useAppSelector} from '../../store/store';
+import {useAppDispatch, useAppSelector} from '../../store/store';
 import {Navigate} from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 
 export const Login = () => {
-    const dispatch = useDispatch()
-    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+    const dispatch = useAppDispatch();
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
     const formik = useFormik({
         initialValues: {
             email: '',
             password: '',
             rememberMe: false
         } as Omit<LoginPayloadDataType, 'captcha'>,
-        onSubmit: (values: Omit<LoginPayloadDataType, 'captcha'>) => {
-            dispatch(login(values))
-            formik.resetForm()
+        onSubmit: async (values: Omit<LoginPayloadDataType, 'captcha'>, formikHelpers) => {
+            const resultAction = await dispatch(login(values));
+            if (login.rejected.match(resultAction)) {
+                if (resultAction.payload?.fieldsErrors?.length) {
+                    resultAction.payload.fieldsErrors.forEach((err) => {
+                        const {field, error} = err;
+                        formikHelpers.setFieldError(field, error)
+                    })
+                }
+            } else {
+                formik.resetForm()
+            }
         },
         validate: (values: Omit<LoginPayloadDataType, 'captcha'>) => {
             const errors: Partial<Omit<LoginPayloadDataType, 'captcha'>> = {};
             if (!values.email) {
                 errors.email = 'Field is required';
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-                errors.email = 'Invalid email address';
-            }
-            if (!values.password) {
+                // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                //     errors.email = 'Invalid email address';
+                // }
+            } else if (!values.password) {
                 errors.password = 'Field is required';
             } else if (values.password.length < 3) {
                 errors.password = 'The password field must be at least 3 characters'
@@ -49,8 +57,8 @@ export const Login = () => {
     return (
         <Grid container justifyContent={'center'} style={{minHeight: 'calc(100vh - 75px'}}>
             <Grid item>
-                <Paper style={{backgroundColor: '#EBECF0', padding:' 20px'}}>
-                    <form onSubmit={formik.handleSubmit} >
+                <Paper style={{backgroundColor: '#EBECF0', padding: ' 20px'}}>
+                    <form onSubmit={formik.handleSubmit}>
                         <FormControl>
                             <FormLabel>
                                 <p>

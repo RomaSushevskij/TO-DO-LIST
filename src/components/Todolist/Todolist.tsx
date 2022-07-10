@@ -48,7 +48,7 @@ export const Todolist = (props: TodolistPropsType) => {
 
     //functionality for update todolist
     const onUpdateTodolistTitle = (newTitle: string) => {
-        dispatch(updateTodolistTitle({todolistId:props.todolistID, title:newTitle}))
+        dispatch(updateTodolistTitle({todolistId: props.todolistID, title: newTitle}))
     };
     const isDisabled = todolist.entityStatus === 'loading'
     return (

@@ -1,5 +1,4 @@
 import {RESULT_CODES, todolistAPI, TodolistResponseType} from "../../../api/todolist-api";
-import {AppDispatch} from '../../store';
 import {RequestStatusType, setAppStatus} from '../app/appReducer';
 import {AxiosError} from 'axios';
 import {handleNetworkAppError, handleServerAppError} from '../../../utils/error_utils';
@@ -32,7 +31,7 @@ export const getToDoLists = createAsyncThunk('todolists/getToDoLists', async (_,
 });
 
 
-export const createTodolist = createAsyncThunk('todolists/createTodolist', async (title: string, {dispatch, rejectWithValue})=>{
+export const createTodolist = createAsyncThunk('todolists/createTodolist', async (title: string, {dispatch, rejectWithValue}) => {
     try {
         dispatch(setAppStatus({status: 'loading'}));
         const data = await todolistAPI.createTodolist(title);
@@ -51,7 +50,7 @@ export const createTodolist = createAsyncThunk('todolists/createTodolist', async
     }
 });
 
-export const removeTodolist = createAsyncThunk('todolists/removeTodolist', async (todolistId: string, {dispatch, rejectWithValue})=> {
+export const removeTodolist = createAsyncThunk('todolists/removeTodolist', async (todolistId: string, {dispatch, rejectWithValue}) => {
     try {
         dispatch(setAppStatus({status: 'loading'}))
         dispatch(changeToDoListsEntityStatus({todolistId: todolistId, entityStatus: 'loading'}));
@@ -72,7 +71,7 @@ export const removeTodolist = createAsyncThunk('todolists/removeTodolist', async
     }
 });
 
-export const updateTodolistTitle = createAsyncThunk('todolists/updateTodolistTitle', async (params: {todolistId: string, title: string}, {dispatch, rejectWithValue})=> {
+export const updateTodolistTitle = createAsyncThunk('todolists/updateTodolistTitle', async (params: { todolistId: string, title: string }, {dispatch, rejectWithValue}) => {
     try {
         dispatch(setAppStatus({status: 'loading'}));
         const data = await todolistAPI.updateTodolist(params.todolistId, params.title);
@@ -112,8 +111,8 @@ const slice = createSlice({
             return [];
         },
     },
-    extraReducers: builder=>{
-        builder.addCase(getToDoLists.fulfilled, (state, action)=> {
+    extraReducers: builder => {
+        builder.addCase(getToDoLists.fulfilled, (state, action) => {
             return action.payload.todolists.map(td => ({...td, filter: 'All', entityStatus: 'idle'}));
         });
         builder.addCase(createTodolist.fulfilled, (state, action) => {
@@ -125,7 +124,7 @@ const slice = createSlice({
                 state.splice(todoIndex, 1);
             }
         });
-        builder.addCase(updateTodolistTitle.fulfilled, (state, action)=>{
+        builder.addCase(updateTodolistTitle.fulfilled, (state, action) => {
             const todoIndex = state.findIndex(td => td.id === action.payload.todolistID);
             if (todoIndex > -1) {
                 state[todoIndex].title = action.payload.newTitle;
