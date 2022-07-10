@@ -1,4 +1,4 @@
-import {addTodolist, deleteTodolist, resetTodolistsData, setToDoLists,} from "../todolists/todolistReducer";
+import {createTodolist, getToDoLists, removeTodolist, resetTodolistsData} from "../todolists/todolistReducer";
 import {RESULT_CODES, TaskType, todolistAPI, UpdateTaskModelType} from "../../../api/todolist-api";
 import {AppStateType} from '../../store';
 import {setAppStatus} from '../app/appReducer';
@@ -111,13 +111,13 @@ const slice = createSlice({
     initialState,
     reducers: {},
     extraReducers(builder) {
-        builder.addCase(addTodolist, (state, action) => {
+        builder.addCase(createTodolist.fulfilled, (state, action) => {
             state[action.payload.todolist.id] = [];
         });
-        builder.addCase(deleteTodolist, (state, action) => {
+        builder.addCase(removeTodolist.fulfilled, (state, action) => {
             delete state[action.payload.todolistID];
         });
-        builder.addCase(setToDoLists, (state, action) => {
+        builder.addCase(getToDoLists.fulfilled, (state, action) => {
             action.payload.todolists.forEach(tl => state[tl.id] = [])
         });
         builder.addCase(resetTodolistsData, () => {

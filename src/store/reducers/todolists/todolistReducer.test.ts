@@ -1,15 +1,13 @@
 import {v1} from "uuid";
 
 import {
-    addTodolist,
     changeFilter,
     changeToDoListsEntityStatus,
-    changeTodolistTitle,
-    deleteTodolist,
+    createTodolist,
+    getToDoLists, removeTodolist,
     resetTodolistsData,
-    setToDoLists,
     todolistsReducer,
-    TodolistType
+    TodolistType, updateTodolistTitle
 } from "./todolistReducer";
 import {tasksReducer, TasksType} from "../tasks/tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../../api/todolist-api";
@@ -96,7 +94,7 @@ beforeEach(() => {
 
 test('selected todolist should be removed', () => {
 
-    const endState = todolistsReducer(startTodolistState, deleteTodolist({todolistID: todolistID_1}))
+    const endState = todolistsReducer(startTodolistState, removeTodolist.fulfilled({todolistID: todolistID_1}, 'requestId', todolistID_1))
     expect(endState.length).toBe(1);
     expect(endState[0].id).toBe(todolistID_2)
 })
@@ -106,7 +104,7 @@ test('should be added new todolist', () => {
     const todolistID = v1()
     const title = 'Technologies'
     const newTodolist = {id: v1(), title: 'new todolist', addedDate: '', order: 0}
-    const endState = todolistsReducer(startTodolistState, addTodolist({todolist: newTodolist}))
+    const endState = todolistsReducer(startTodolistState, createTodolist.fulfilled({todolist: newTodolist}, 'requestId', title))
 
     expect(endState.length).toBe(3)
     expect(endState[0].title).toBe(newTodolist.title)
@@ -125,10 +123,11 @@ test('correct filter of todolist should be changed', () => {
 
 test('correct todolist should be change it\'s name', () => {
 
-    const endState = todolistsReducer(startTodolistState, changeTodolistTitle({
+    const payload = {
         todolistID: todolistID_1,
         newTitle: 'New tasks'
-    },))
+    };
+    const endState = todolistsReducer(startTodolistState, updateTodolistTitle.fulfilled(payload, 'requestId', {todolistId:payload.todolistID, title: payload.newTitle}))
 
     expect(endState[1].title).toBe('What to work')
     expect(endState[0].title).toBe('New tasks')
@@ -203,7 +202,7 @@ test('new array should be added when new todolist is added', () => {
     };
     const newTodolist = {id: v1(), title: "new todolist", addedDate: '', order: 0}
 
-    const action = addTodolist({todolist: newTodolist});
+    const action = createTodolist.fulfilled({todolist: newTodolist}, 'requestId', newTodolist.title);
 
     const endState = tasksReducer(startState, action)
 
@@ -223,7 +222,7 @@ test('ids should be equals', () => {
     const startTodolistsState: Array<TodolistType> = [];
     const todolistID = v1()
     const newTodolist = {id: todolistID, title: "new todolist", addedDate: '', order: 0}
-    const action = addTodolist({todolist: newTodolist});
+    const action = createTodolist.fulfilled({todolist: newTodolist}, 'requestId', newTodolist.title);
 
     const endTasksState = tasksReducer(startTasksState, action)
     const endTodolistsState = todolistsReducer(startTodolistsState, action)
@@ -304,7 +303,7 @@ test('property with todolistId should be deleted', () => {
         ]
     };
 
-    const action = deleteTodolist({todolistID: "todolistId2"});
+    const action = removeTodolist.fulfilled({todolistID: "todolistId2"}, 'requestId', "todolistId2");
 
     const endState = tasksReducer(startState, action)
 
@@ -316,8 +315,8 @@ test('property with todolistId should be deleted', () => {
 });
 
 test('current todolists should be added to state', () => {
-    const todoId_1 = v1()
-    const todoId_2 = v1()
+    const todoId_1 = v1();
+    const todoId_2 = v1();
     const currentTodolists = [
         {id: todoId_1, title: 'Todos 1', addedDate: '', order: 0},
         {id: todoId_2, title: 'Todos 2', addedDate: '', order: 1}
@@ -327,8 +326,8 @@ test('current todolists should be added to state', () => {
         {id: todoId_2, title: 'Todos 2', addedDate: '', order: 1, filter: 'All', entityStatus: 'idle'}
     ]
 
-    const endTodolistState = todolistsReducer(startTodolistState, setToDoLists({todolists: currentTodolists}))
-    const endTasksState = tasksReducer(startTasksState, setToDoLists({todolists: currentTodolists}))
+    const endTodolistState = todolistsReducer(startTodolistState, getToDoLists.fulfilled({todolists: currentTodolists}, 'requestId'))
+    const endTasksState = tasksReducer(startTasksState, getToDoLists.fulfilled({todolists: currentTodolists}, 'requestId'))
 
     expect(endTodolistState).toEqual(currentTodolistsRes)
     expect(endTasksState).toEqual({...startTasksState, [todoId_1]: [], [todoId_2]: []})
