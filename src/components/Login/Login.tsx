@@ -10,13 +10,17 @@ import {useFormik} from 'formik';
 import style from './Login.module.css';
 import {LoginPayloadDataType} from '../../api/todolist-api';
 import {login} from '../../store/reducers/auth/authReducer';
-import {useAppDispatch, useAppSelector} from '../../store/store';
 import {Navigate} from 'react-router-dom';
 import Paper from '@mui/material/Paper';
+import {getIsLoggedIn} from '../../store/selectors/auth-selectors';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 
 export const Login = () => {
+
     const dispatch = useAppDispatch();
-    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
+
+    const isLoggedIn = useAppSelector(getIsLoggedIn);
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -40,9 +44,6 @@ export const Login = () => {
             const errors: Partial<Omit<LoginPayloadDataType, 'captcha'>> = {};
             if (!values.email) {
                 errors.email = 'Field is required';
-                // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-                //     errors.email = 'Invalid email address';
-                // }
             } else if (!values.password) {
                 errors.password = 'Field is required';
             } else if (values.password.length < 3) {
@@ -51,9 +52,11 @@ export const Login = () => {
             return errors;
         }
     });
+
     if (isLoggedIn) {
         return <Navigate to={'/'}/>
     }
+
     return (
         <Grid container justifyContent={'center'} style={{minHeight: 'calc(100vh - 75px'}}>
             <Grid item>
@@ -102,4 +105,4 @@ export const Login = () => {
             </Grid>
         </Grid>
     )
-}
+};

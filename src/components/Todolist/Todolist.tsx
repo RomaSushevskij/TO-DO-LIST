@@ -7,8 +7,6 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import IconButton from "@mui/material/IconButton";
 import Close from "@mui/icons-material/Close";
 import Button from '@mui/material/Button';
-import {useSelector} from "react-redux";
-import {AppStateType, useAppDispatch, useAppSelector} from "../../store/store";
 import {createTask} from "../../store/reducers/tasks/tasksReducer";
 import {
     changeFilter,
@@ -18,39 +16,42 @@ import {
     updateTodolistTitle
 } from "../../store/reducers/todolists/todolistReducer";
 import Paper from '@mui/material/Paper';
-import {TaskType} from '../../api/todolist-api';
+import {getTasksForCurrentTodolist} from '../../store/selectors/tasks-selectors';
+import {getCurrentTodolist} from '../../store/selectors/todolists-selectors';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 
-
-type TodolistPropsType = {
+export type TodolistPropsType = {
     todolistID: string
 }
 
+export const Todolist = ({todolistID}: TodolistPropsType) => {
 
-export const Todolist = (props: TodolistPropsType) => {
-    const selectTodolist = (state: AppStateType) => state.todolists.filter(td => td.id === props.todolistID)[0]
-    const todolist: TodolistType = useSelector(selectTodolist)
-    const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todolistID])
     const dispatch = useAppDispatch();
+
+    const todolist: TodolistType = useAppSelector((state) => getCurrentTodolist(state, todolistID));
+    const tasks = useAppSelector(state => getTasksForCurrentTodolist(state, todolistID));
+    const isDisabled = todolist.entityStatus === 'loading';
 
     //functionality for removing todolists
     const onClickRemovingTodolistHandler = () => {
-        dispatch(removeTodolist(props.todolistID))
+        dispatch(removeTodolist(todolistID))
     };
+
     //functionality for filtering tasks
     const onClickFilterType = (filterType: FilterValueType) => {
-        dispatch(changeFilter({todolistID: props.todolistID, filterType}))
+        dispatch(changeFilter({todolistID: todolistID, filterType}))
     };
 
     //functionality for adding tasks
     const onClickAddTaskHandler = (newTitleTask: string) => {
-        dispatch(createTask({todolistId: props.todolistID, title: newTitleTask}));
+        dispatch(createTask({todolistId: todolistID, title: newTitleTask}));
     };
 
     //functionality for update todolist
     const onUpdateTodolistTitle = (newTitle: string) => {
-        dispatch(updateTodolistTitle({todolistId: props.todolistID, title: newTitle}))
+        dispatch(updateTodolistTitle({todolistId: todolistID, title: newTitle}))
     };
-    const isDisabled = todolist.entityStatus === 'loading'
+
     return (
         <div className={style.todolistWrapper}>
             <Paper style={{backgroundColor: '#EBECF0', padding: '1px 20px 20px 20px'}}>
@@ -73,7 +74,7 @@ export const Todolist = (props: TodolistPropsType) => {
                                      addItem={onClickAddTaskHandler}
                                      disabled={todolist.entityStatus === 'loading'}/>
                 </div>
-                <TasksMap todolistID={props.todolistID}/>
+                <TasksMap todolistID={todolistID}/>
                 {tasks && tasks.length > 0 &&
                 <div className={style.buttonsBlock}>
                     <ButtonGroup color={"inherit"} variant="text" aria-label="text button group">

@@ -10,19 +10,18 @@ export type InputPropsType = {
 }
 
 export const Input = React.memo(({
-                          setInputTitleValue,
-                          inputTitleValue,
-                          callback, styles,
-                          setError,
-                          ...props
-                      }: InputPropsType) => {
+                                     setInputTitleValue,
+                                     inputTitleValue,
+                                     callback, styles,
+                                     setError,
+                                 }: InputPropsType) => {
 
-    const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setInputTitleValue(event.currentTarget.value);
         setError(false);
     };
 
-    const onKeyPressAddTaskHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+    const onInputKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             if (inputTitleValue.trim()) {
                 callback();
@@ -34,7 +33,9 @@ export const Input = React.memo(({
     };
 
     return (
-        <input className={styles} onChange={onChangeInput} value={inputTitleValue}
-               onKeyPress={onKeyPressAddTaskHandler}/>
+        <input className={styles}
+               onChange={onInputChange}
+               value={inputTitleValue}
+               onKeyPress={onInputKeyPress}/>
     )
 });

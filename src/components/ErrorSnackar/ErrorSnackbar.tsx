@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, {AlertProps} from '@mui/material/Alert';
-import {useAppDispatch, useAppSelector} from '../../store/store';
 import {setAppErrorMessage} from '../../store/reducers/app/appReducer';
+import {getAppErrorMessage} from '../../store/selectors/app-selectors';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -12,14 +13,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 export const ErrorSnackbar = () => {
-    const errorMessage = useAppSelector(state => state.app.errorMessage)
+
     const dispatch = useAppDispatch();
+
+    const errorMessage = useAppSelector(getAppErrorMessage);
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-        dispatch(setAppErrorMessage({errorMessage:null}))
+        dispatch(setAppErrorMessage({errorMessage: null}))
     };
 
     return (
@@ -29,4 +32,4 @@ export const ErrorSnackbar = () => {
             </Alert>
         </Snackbar>
     );
-}
+};

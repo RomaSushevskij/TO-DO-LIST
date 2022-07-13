@@ -16,14 +16,13 @@ export const InputWithButton = React.memo(({
                                                addItem,
                                                inputLabel,
                                                disabled,
-                                               ...props
                                            }: InputWithButtonPropsType) => {
 
     //local state for input
     const [inputTitleValue, setInputTitleValue] = useState<string>('');
     const [error, setError] = useState<boolean>(false);
 
-    const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const onInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setInputTitleValue(event.currentTarget.value);
         if (error) {
             setError(false);
@@ -40,24 +39,26 @@ export const InputWithButton = React.memo(({
             setError(true)
         }
     }, [addItem, inputTitleValue]);
-    const onKeyPressAddTaskHandler = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+
+    const onFieldKeyPress = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             onButtonClick();
         }
     }, [onButtonClick]);
+
     return (
         <div>
             <TextField error={error}
-                       onChange={onChangeInput}
+                       onChange={onInputChange}
                        value={inputTitleValue}
-                       onKeyPress={onKeyPressAddTaskHandler}
+                       onKeyPress={onFieldKeyPress}
                        helperText={error ? 'Field is required' : null}
                        size={"small"} id="outlined-basic"
                        label={inputLabel}
                        variant="outlined"
                        disabled={disabled}
                        style={{borderColor: '#6D88B8'}}
-            className={style.textField}/>
+                       className={style.textField}/>
             <Fab style={{marginLeft: "15px", backgroundColor: '#6D88B8', color: '#ffffff'}}
                  onClick={onButtonClick}
                  aria-label="add" size={"small"}
