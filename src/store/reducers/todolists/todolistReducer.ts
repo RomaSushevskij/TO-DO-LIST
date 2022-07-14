@@ -114,22 +114,22 @@ const slice = createSlice({
     extraReducers: builder => {
         builder.addCase(getToDoLists.fulfilled, (state, action) => {
             return action.payload.todolists.map(td => ({...td, filter: 'All', entityStatus: 'idle'}));
-        });
-        builder.addCase(createTodolist.fulfilled, (state, action) => {
-            state.unshift({...action.payload.todolist, filter: "All", entityStatus: 'idle'});
-        });
-        builder.addCase(removeTodolist.fulfilled, (state, action) => {
-            const todoIndex = state.findIndex(td => td.id === action.payload.todolistID);
-            if (todoIndex > -1) {
-                state.splice(todoIndex, 1);
-            }
-        });
-        builder.addCase(updateTodolistTitle.fulfilled, (state, action) => {
-            const todoIndex = state.findIndex(td => td.id === action.payload.todolistID);
-            if (todoIndex > -1) {
-                state[todoIndex].title = action.payload.newTitle;
-            }
-        });
+        })
+            .addCase(createTodolist.fulfilled, (state, action) => {
+                state.unshift({...action.payload.todolist, filter: "All", entityStatus: 'idle'});
+            })
+            .addCase(removeTodolist.fulfilled, (state, action) => {
+                const todoIndex = state.findIndex(td => td.id === action.payload.todolistID);
+                if (todoIndex > -1) {
+                    state.splice(todoIndex, 1);
+                }
+            })
+            .addCase(updateTodolistTitle.fulfilled, (state, action) => {
+                const todoIndex = state.findIndex(td => td.id === action.payload.todolistID);
+                if (todoIndex > -1) {
+                    state[todoIndex].title = action.payload.newTitle;
+                }
+            });
     }
 
 });

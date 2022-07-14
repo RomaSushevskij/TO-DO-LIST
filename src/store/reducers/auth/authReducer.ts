@@ -8,7 +8,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 export type AuthInitialStateType = typeof initialState;
 
 // T H U N K S
-export const login = createAsyncThunk<undefined, Omit<LoginPayloadDataType, 'captcha'>, { rejectValue: {errors:string[], fieldsErrors?:FieldErrorType[]} }>('auth/login', async (params, {dispatch, rejectWithValue}) => {
+export const login = createAsyncThunk<undefined, Omit<LoginPayloadDataType, 'captcha'>, { rejectValue: { errors: string[], fieldsErrors?: FieldErrorType[] } }>('auth/login', async (params, {dispatch, rejectWithValue}) => {
     try {
         dispatch(setAppStatus({status: 'loading'}));
         const data = await authAPI.login(params);
@@ -16,7 +16,7 @@ export const login = createAsyncThunk<undefined, Omit<LoginPayloadDataType, 'cap
             dispatch(setIsLoggedIn({isLoggedIn: true}))
         } else {
             handleServerAppError(dispatch, data);
-            return rejectWithValue({errors:data.messages, fieldsErrors:data.fieldsErrors})
+            return rejectWithValue({errors: data.messages, fieldsErrors: data.fieldsErrors})
         }
     } catch (e) {
         const error = e as AxiosError;
@@ -59,11 +59,10 @@ const slice = createSlice({
     extraReducers: builder => {
         builder.addCase(login.fulfilled, (state) => {
             state.isLoggedIn = true;
-        });
-        builder.addCase(logout.fulfilled, (state) => {
-            state.isLoggedIn = false;
-
         })
+            .addCase(logout.fulfilled, (state) => {
+                state.isLoggedIn = false;
+            })
     }
 });
 export const {setIsLoggedIn} = slice.actions;

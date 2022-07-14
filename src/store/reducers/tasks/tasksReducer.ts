@@ -113,44 +113,43 @@ const slice = createSlice({
     extraReducers(builder) {
         builder.addCase(createTodolist.fulfilled, (state, action) => {
             state[action.payload.todolist.id] = [];
-        });
-        builder.addCase(removeTodolist.fulfilled, (state, action) => {
-            delete state[action.payload.todolistID];
-        });
-        builder.addCase(getToDoLists.fulfilled, (state, action) => {
-            action.payload.todolists.forEach(tl => state[tl.id] = [])
-        });
-        builder.addCase(resetTodolistsData, () => {
-            return {}
-        });
-        builder.addCase(getTasks.fulfilled, (state, action) => {
-            state[action.payload.todolistId] = action.payload.tasks
-        });
-        builder.addCase(createTask.fulfilled, (state, action) => {
-            state[action.payload.task.todoListId].unshift(action.payload.task);
-        });
-        builder.addCase(removeTask.fulfilled, (state, action) => {
-            const tasks = state[action.payload.todolistId];
-            const taskIndex = tasks.findIndex(task => task.id === action.payload.taskId);
-            if (taskIndex > -1) {
-                tasks.splice(taskIndex, 1);
-            }
-        });
-        builder.addCase(updateTask.fulfilled, (state, action) => {
-            if (action.payload) {
-                const tasks = state[action.payload.todolistId];
-                const taskIndex = tasks.findIndex(task => {
-                    if (action.payload) {
-                        return task.id === action.payload.taskId
-                    }
-                });
-                if (taskIndex > -1) {
-                    tasks[taskIndex] = {...tasks[taskIndex], ...action.payload.model};
-                }
-            }
-
         })
-    }
+            .addCase(removeTodolist.fulfilled, (state, action) => {
+                delete state[action.payload.todolistID];
+            })
+            .addCase(getToDoLists.fulfilled, (state, action) => {
+                action.payload.todolists.forEach(tl => state[tl.id] = [])
+            })
+            .addCase(resetTodolistsData, () => {
+                return {}
+            })
+            .addCase(getTasks.fulfilled, (state, action) => {
+                state[action.payload.todolistId] = action.payload.tasks
+            })
+            .addCase(createTask.fulfilled, (state, action) => {
+                state[action.payload.task.todoListId].unshift(action.payload.task);
+            })
+            .addCase(removeTask.fulfilled, (state, action) => {
+                const tasks = state[action.payload.todolistId];
+                const taskIndex = tasks.findIndex(task => task.id === action.payload.taskId);
+                if (taskIndex > -1) {
+                    tasks.splice(taskIndex, 1);
+                }
+            })
+            .addCase(updateTask.fulfilled, (state, action) => {
+                if (action.payload) {
+                    const tasks = state[action.payload.todolistId];
+                    const taskIndex = tasks.findIndex(task => {
+                        if (action.payload) {
+                            return task.id === action.payload.taskId
+                        }
+                    });
+                    if (taskIndex > -1) {
+                        tasks[taskIndex] = {...tasks[taskIndex], ...action.payload.model};
+                    }
+                }
 
+            })
+    }
 });
 export const tasksReducer = slice.reducer;
