@@ -25,10 +25,11 @@ export const TasksMap = React.memo(({todolistID}: TasksPropsType) => {
 
     return (
         <ul className={style.taskWrapper}>
-            {filteredTasks.map(({id}) => {
+            {filteredTasks.map(({id}, ind) => {
                 return <Task key={id}
                              taskID={id}
-                             todolistID={todolistID}/>
+                             todolistID={todolistID}
+                             index={ind}/>
             })}
         </ul>
     )

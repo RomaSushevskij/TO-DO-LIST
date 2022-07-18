@@ -2,6 +2,7 @@
     box-sizing: border-box;
     width: 310px;
     position: relative;
+    cursor: grab;
 }
 
 h3 {

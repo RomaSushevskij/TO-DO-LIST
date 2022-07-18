@@ -131,6 +131,12 @@ export const todolistAPI = {
             .then(response => {
                 return response.data
             })
+    },
+    async reorderTask(todolistId: string, taskId: string, replaceableId: string | null) {
+        debugger
+        const response = await todoInstance.put(`todo-lists/${todolistId}/tasks/${taskId}/reorder`,
+            {putAfterItemId: replaceableId});
+        return response.data
     }
 };
 export const authAPI = {
@@ -152,4 +158,4 @@ export const authAPI = {
                 return response.data
             })
     }
-}
+};

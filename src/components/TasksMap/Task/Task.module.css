@@ -1,14 +1,33 @@
-.isDone {
-    text-decoration: line-through;
+.wrapperTask {
+    transition: all .2s ease;
 }
 
-li {
+.wrapperTask.replaceableTask {
+    padding-bottom: 54px;
+    transition: all .2s ease;
+    box-sizing: border-box;
+}
+.wrapperTask.firstTask {
+    padding-top: 54px;
+    transition: all .2s ease;
+    box-sizing: border-box;
+}
+.content {
+    width:100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    word-break:break-word;
+    word-break: break-word;
     background-color: white;
     margin: 10px 0;
-    border-radius:5px;
-    box-shadow:0 0 15px rgba(0,0,0,0.08)
+    padding: 3px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+    cursor: grab;
+    transition: all .2s ease;
+    min-height: 44px;
 }
+.content.isDone {
+    text-decoration: line-through;
+}
+

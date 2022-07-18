@@ -4,7 +4,7 @@ import {combineReducers, createStore} from "redux";
 import {tasksReducer} from "../../store/reducers/tasks/tasksReducer";
 import {todolistsReducer} from "../../store/reducers/todolists/todolistReducer";
 import {v1} from "uuid";
-import {TaskPriorities, TaskStatuses} from "../../api/todolist-api";
+import {TaskPriorities, TaskStatuses, TaskType} from "../../api/todolist-api";
 import {appReducer, RequestStatusType} from '../../store/reducers/app/appReducer';
 import {authReducer} from '../../store/reducers/auth/authReducer';
 
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
     app: appReducer,
-    auth:authReducer
+    auth: authReducer
 })
 
 const initialGlobalState = {
@@ -21,66 +21,70 @@ const initialGlobalState = {
         {id: 'todolistID_2', title: 'What to work', filter: 'All', entityStatus: 'idle', addedDate: '', order: 0}
     ],
     tasks: {
-        ['todolistID_1']: [
-            {
-                id: v1(),
-                title: 'HTML&CSS',
-                status: TaskStatuses.Completed,
-                addedDate: '',
-                deadline: '',
-                description: 'new task',
-                order: 1,
-                priority: TaskPriorities.Low,
-                startDate: '',
-                todoListId: 'todolistID_1',
-            },
-            {
-                id: v1(),
-                title: 'JS',
-                status: TaskStatuses.New,
-                addedDate: '',
-                deadline: '',
-                description: 'new task2',
-                order: 1,
-                priority: TaskPriorities.Middle,
-                startDate: '',
-                todoListId: 'todolistID_1',
-            },
-        ],
-        ['todolistID_2']: [
-            {
-                id: v1(),
-                title: 'Incubator',
-                status: TaskStatuses.Completed,
-                addedDate: '',
-                deadline: '',
-                description: 'new task1',
-                order: 1,
-                priority: TaskPriorities.Low,
-                startDate: '',
-                todoListId: 'todolistID_2',
-            },
-            {
-                id: v1(),
-                title: 'EPAM',
-                status: TaskStatuses.New,
-                addedDate: '',
-                deadline: '',
-                description: 'new task1',
-                order: 1,
-                priority: TaskPriorities.Middle,
-                startDate: '',
-                todoListId: 'todolistID_2',
-            },
-        ]
+        tasksData: {
+            ['todolistID_1']: [
+                {
+                    id: v1(),
+                    title: 'HTML&CSS',
+                    status: TaskStatuses.Completed,
+                    addedDate: '',
+                    deadline: '',
+                    description: 'new task',
+                    order: 1,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    todoListId: 'todolistID_1',
+                },
+                {
+                    id: v1(),
+                    title: 'JS',
+                    status: TaskStatuses.New,
+                    addedDate: '',
+                    deadline: '',
+                    description: 'new task2',
+                    order: 1,
+                    priority: TaskPriorities.Middle,
+                    startDate: '',
+                    todoListId: 'todolistID_1',
+                },
+            ],
+            ['todolistID_2']: [
+                {
+                    id: v1(),
+                    title: 'Incubator',
+                    status: TaskStatuses.Completed,
+                    addedDate: '',
+                    deadline: '',
+                    description: 'new task1',
+                    order: 1,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    todoListId: 'todolistID_2',
+                },
+                {
+                    id: v1(),
+                    title: 'EPAM',
+                    status: TaskStatuses.New,
+                    addedDate: '',
+                    deadline: '',
+                    description: 'new task1',
+                    order: 1,
+                    priority: TaskPriorities.Middle,
+                    startDate: '',
+                    todoListId: 'todolistID_2',
+                },
+            ]
+        },
+        replacementTask: {} as TaskType
+
     },
     app: {
         status: 'idle' as RequestStatusType,
         errorMessage: null as NullableType<string>,
-        isInitialized:false
+        isInitialized: false
     },
     auth: {
-        isLoggedIn:false
+        isLoggedIn: false
     }
 };
 

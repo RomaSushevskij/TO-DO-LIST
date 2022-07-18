@@ -53,7 +53,8 @@ export const Todolist = ({todolistID}: TodolistPropsType) => {
     };
 
     return (
-        <div className={style.todolistWrapper}>
+        <div className={style.todolistWrapper}
+             draggable>
             <Paper style={{backgroundColor: '#EBECF0', padding: '1px 20px 20px 20px'}}>
                 <div className={style.todolistHeader}>
                     <h3>
