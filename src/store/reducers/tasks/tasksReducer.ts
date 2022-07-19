@@ -105,28 +105,34 @@ export const updateTask = createAsyncThunk('tasks/updateTask', async (params: { 
     }
 });
 
-export const reorderTask = createAsyncThunk('tasks/reorderTask', async (params: { todolistId: string, taskId: string, replaceableId: string | null}, {dispatch, rejectWithValue, getState}) => {
+export const reorderTask = createAsyncThunk('tasks/reorderTask', async (params: { todolistId: string, draggableTaskIndex: number, replaceableTaskIndex: number | undefined, draggableTaskId: string }, {dispatch, rejectWithValue, getState}) => {
     try {
         const state = getState() as AppStateType;
-        const currentTasks = state.tasks.tasksData[params.todolistId];
-        const indexOfReplaceableTask = currentTasks.findIndex(task => task.id === params.replaceableId) - 1;
-        const replaceableTaskId = indexOfReplaceableTask > -1 ? currentTasks[indexOfReplaceableTask].id : null;
-        dispatch(setAppStatus({status: 'loading'}));
-        const data = await todolistAPI.reorderTask(params.todolistId, params.taskId, params.replaceableId);
-        if (data.resultCode === RESULT_CODES.success) {
-            dispatch(getTasks(params.todolistId))
-        } else {
-            handleServerAppError(dispatch, data);
-            return rejectWithValue(null)
+        if (params.replaceableTaskIndex !== undefined) {
+            const replaceableTaskIndex = params.draggableTaskIndex > params.replaceableTaskIndex ?
+                params.replaceableTaskIndex - 1 : params.replaceableTaskIndex;
+            const replaceableTaskId = params.replaceableTaskIndex > 0 ? state.tasks.tasksData[params.todolistId][replaceableTaskIndex].id : null;
+            dispatch(setAppStatus({status: 'loading'}));
+            dispatch(setReorderedTask({
+                todolistId: params.todolistId,
+                draggableTaskIndex: params.draggableTaskIndex,
+                replaceableTaskIndex: params.replaceableTaskIndex
+            }));
+            debugger
+            const data = await todolistAPI.reorderTask(params.todolistId, params.draggableTaskId, replaceableTaskId);
+            if (data.resultCode === RESULT_CODES.success) {
+            } else {
+                handleServerAppError(dispatch, data);
+                return rejectWithValue(null)
+            }
         }
     } catch (e) {
         const error = e as AxiosError;
-        handleNetworkAppError(dispatch, error)
+        handleNetworkAppError(dispatch, error);
         return rejectWithValue(null);
     } finally {
         dispatch(setAppStatus({status: 'succeeded'}))
     }
-
 });
 
 const initialState = {
@@ -138,8 +144,15 @@ const slice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        setReplacementTask(state, action: PayloadAction<{ replacementTask: TaskType }>) {
-            state.replacementTask = action.payload.replacementTask
+        setReorderedTask(state, action: PayloadAction<{
+            todolistId: string,
+            draggableTaskIndex: number,
+            replaceableTaskIndex: number
+        }>) {
+            const {todolistId, draggableTaskIndex, replaceableTaskIndex} = action.payload;
+            const currentTasks = state.tasksData[todolistId];
+            const [reorderedTask] = currentTasks.splice(draggableTaskIndex, 1);
+            currentTasks.splice(replaceableTaskIndex, 0, reorderedTask);
         }
     },
     extraReducers(builder) {
@@ -185,4 +198,4 @@ const slice = createSlice({
     }
 });
 export const tasksReducer = slice.reducer;
-export const {setReplacementTask} = slice.actions;
+export const {setReorderedTask} = slice.actions;

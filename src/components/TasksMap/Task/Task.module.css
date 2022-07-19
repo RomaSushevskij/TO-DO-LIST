@@ -1,17 +1,3 @@
-.wrapperTask {
-    transition: all .2s ease;
-}
-
-.wrapperTask.replaceableTask {
-    padding-bottom: 54px;
-    transition: all .2s ease;
-    box-sizing: border-box;
-}
-.wrapperTask.firstTask {
-    padding-top: 54px;
-    transition: all .2s ease;
-    box-sizing: border-box;
-}
 .content {
     width:100%;
     display: flex;

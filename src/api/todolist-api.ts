@@ -133,7 +133,6 @@ export const todolistAPI = {
             })
     },
     async reorderTask(todolistId: string, taskId: string, replaceableId: string | null) {
-        debugger
         const response = await todoInstance.put(`todo-lists/${todolistId}/tasks/${taskId}/reorder`,
             {putAfterItemId: replaceableId});
         return response.data

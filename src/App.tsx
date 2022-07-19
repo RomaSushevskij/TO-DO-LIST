@@ -19,6 +19,8 @@ import style from './App.module.css'
 import {getIsInitialized, getStatus} from './store/selectors/app-selectors';
 import {getIsLoggedIn} from './store/selectors/auth-selectors';
 import {useAppDispatch, useAppSelector} from './hooks';
+import {DragDropContext, DropResult} from 'react-beautiful-dnd';
+import {reorderTask} from './store/reducers/tasks/tasksReducer';
 
 const appBapStyle = {
     backgroundColor: 'rgba(0,0,0,0.2)',
@@ -37,6 +39,21 @@ function App() {
     const logoutHandler = () => {
         dispatch(logout())
     };
+
+    const onTaskDragEnd = (result: DropResult) => {
+        console.log(result);
+        const draggableTaskIndex = result.source.index;
+        const replaceableTaskIndex = result.destination?.index;
+        const todolistId = result.source.droppableId;
+        const draggableTaskId = result.draggableId;
+        dispatch(reorderTask({
+            todolistId,
+            draggableTaskIndex: draggableTaskIndex,
+            replaceableTaskIndex,
+            draggableTaskId: draggableTaskId
+        }))
+    };
+
     useEffect(() => {
         dispatch(initializeApp())
     }, []);
@@ -46,37 +63,39 @@ function App() {
     }
 
     return (
-        <div className="App">
-            <AppBar position="static" style={appBapStyle}>
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{mr: 2}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        News
-                    </Typography>
-                    {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
-                </Toolbar>
-            </AppBar>
-            <div className={style.progressBar}>
-                {status === 'loading' && <LinearProgress/>}
+        <DragDropContext onDragEnd={onTaskDragEnd}>
+            <div className="App">
+                <AppBar position="static" style={appBapStyle}>
+                    <Toolbar>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            sx={{mr: 2}}
+                        >
+                            <MenuIcon/>
+                        </IconButton>
+                        <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                            News
+                        </Typography>
+                        {isLoggedIn && <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
+                    </Toolbar>
+                </AppBar>
+                <div className={style.progressBar}>
+                    {status === 'loading' && <LinearProgress/>}
+                </div>
+                <Container fixed>
+                    <Routes>
+                        <Route path={'/'} element={<TodolistList/>}/>
+                        <Route path={'login'} element={<Login/>}/>
+                        <Route path={'404'} element={<h1>404 page not found</h1>}/>
+                        <Route path={'*'} element={<Navigate to={'404'}/>}/>
+                    </Routes>
+                </Container>
+                <ErrorSnackbar/>
             </div>
-            <Container fixed>
-                <Routes>
-                    <Route path={'/'} element={<TodolistList/>}/>
-                    <Route path={'login'} element={<Login/>}/>
-                    <Route path={'404'} element={<h1>404 page not found</h1>}/>
-                    <Route path={'*'} element={<Navigate to={'404'}/>}/>
-                </Routes>
-            </Container>
-            <ErrorSnackbar/>
-        </div>
+        </DragDropContext>
     );
 }
 
