@@ -41,7 +41,6 @@ function App() {
     };
 
     const onTaskDragEnd = (result: DropResult) => {
-        console.log(result);
         const draggableTaskIndex = result.source.index;
         const replaceableTaskIndex = result.destination?.index;
         const todolistId = result.source.droppableId;
@@ -50,7 +49,7 @@ function App() {
             todolistId,
             draggableTaskIndex: draggableTaskIndex,
             replaceableTaskIndex,
-            draggableTaskId: draggableTaskId
+            draggableTaskId: result.draggableId
         }))
     };
 

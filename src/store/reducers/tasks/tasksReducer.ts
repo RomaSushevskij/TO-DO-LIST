@@ -113,14 +113,13 @@ export const reorderTask = createAsyncThunk('tasks/reorderTask', async (params: 
                 params.replaceableTaskIndex - 1 : params.replaceableTaskIndex;
             const replaceableTaskId = params.replaceableTaskIndex > 0 ? state.tasks.tasksData[params.todolistId][replaceableTaskIndex].id : null;
             dispatch(setAppStatus({status: 'loading'}));
-            dispatch(setReorderedTask({
-                todolistId: params.todolistId,
-                draggableTaskIndex: params.draggableTaskIndex,
-                replaceableTaskIndex: params.replaceableTaskIndex
-            }));
-            debugger
             const data = await todolistAPI.reorderTask(params.todolistId, params.draggableTaskId, replaceableTaskId);
             if (data.resultCode === RESULT_CODES.success) {
+                return {
+                        todolistId: params.todolistId,
+                        draggableTaskIndex: params.draggableTaskIndex,
+                        replaceableTaskIndex: params.replaceableTaskIndex
+                    }
             } else {
                 handleServerAppError(dispatch, data);
                 return rejectWithValue(null)
@@ -143,18 +142,7 @@ export type InitialStateTasksType = typeof initialState;
 const slice = createSlice({
     name: 'tasks',
     initialState,
-    reducers: {
-        setReorderedTask(state, action: PayloadAction<{
-            todolistId: string,
-            draggableTaskIndex: number,
-            replaceableTaskIndex: number
-        }>) {
-            const {todolistId, draggableTaskIndex, replaceableTaskIndex} = action.payload;
-            const currentTasks = state.tasksData[todolistId];
-            const [reorderedTask] = currentTasks.splice(draggableTaskIndex, 1);
-            currentTasks.splice(replaceableTaskIndex, 0, reorderedTask);
-        }
-    },
+    reducers: {},
     extraReducers(builder) {
         builder.addCase(createTodolist.fulfilled, (state, action) => {
             state.tasksData[action.payload.todolist.id] = [];
@@ -195,7 +183,14 @@ const slice = createSlice({
                 }
 
             })
+            .addCase(reorderTask.fulfilled,(state, action) => {
+                if (action.payload) {
+                    const {todolistId, draggableTaskIndex, replaceableTaskIndex} = action.payload;
+                    const currentTasks = state.tasksData[todolistId];
+                    const [reorderedTask] = currentTasks.splice(draggableTaskIndex, 1);
+                    currentTasks.splice(replaceableTaskIndex, 0, reorderedTask);
+                }
+            })
     }
 });
 export const tasksReducer = slice.reducer;
-export const {setReorderedTask} = slice.actions;
