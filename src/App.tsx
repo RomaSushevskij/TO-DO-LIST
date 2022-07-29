@@ -49,7 +49,7 @@ function App() {
             todolistId,
             draggableTaskIndex: draggableTaskIndex,
             replaceableTaskIndex,
-            draggableTaskId: result.draggableId
+            draggableTaskId: draggableTaskId
         }))
     };
 
@@ -95,7 +95,7 @@ function App() {
                 <ErrorSnackbar/>
             </div>
         </DragDropContext>
-    );
+    )
 }
 
 export default App;
