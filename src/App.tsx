@@ -95,7 +95,7 @@ function App() {
                 <ErrorSnackbar/>
             </div>
         </DragDropContext>
-    )
+    );
 }
 
 export default App;
